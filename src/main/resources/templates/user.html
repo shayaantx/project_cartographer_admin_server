@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Project Cartographer Admin</title>
+    <link th:href="@{/css/common.css}" rel="stylesheet" />
+    <script type="text/javascript" th:src="@{/js/jquery-3.3.1.js}" />
+    <script type="text/javascript" th:src="@{/js/common.js}" />
+    <script type="text/javascript">
+        initCommonJs();
+    </script>
+</head>
+<body>
+<div class="banner">
+    <a class="navbar-brand" href="https://cartographer.online/">
+        <img src="https://cartographer.online/h2pc-api/h2pc_logo.png" class="center" width="48px" /> Project Cartographer Administration
+    </a>
+</div>
+
+<div class="content">
+    <div class="verticalnavbar">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a class="active" href="/user">Edit User</a></li>
+            <li><a href="/users">Users</a></li>
+            <li><a href="/servers">Servers</a></li>
+        </ul>
+    </div>
+    <div class="pageContent" th:switch="${hasUser}">
+        <div class="success"><p th:text="${success}"></p></div>
+        <div class="error"><p th:text="${error}"></p></div>
+        <div class="noUser" th:case="false">
+            <p>Lookup a user by id or name or email</p>
+            <div class="editUserRow">
+                <div class="editUserInputLabel"><label for="idToFind">Id</label></div>
+                <div class="editUserInputField"><input type="text" id="idToFind" name="idToFind"/></div>
+            </div>
+            <div class="editUserRow">
+                <div class="editUserInputLabel"><label for="usernameToFind">Username</label></div>
+                <div class="editUserInputField"><input type="text" id="usernameToFind" name="usernameToFind"/></div>
+            </div>
+            <div class="editUserRow">
+                <div class="editUserInputLabel"><label for="emailToFind">Email</label></div>
+                <div class="editUserInputField"><input type="text" id="emailToFind" name="emailToFind"/></div>
+            </div>
+            <div class="editUserRow">
+                <div class="editUserInputLabel"><button id="findButton" type="button">Find</button></div>
+            </div>
+        </div>
+        <div class="editUser" th:case="true">
+            <p>Edit User</p>
+            <hr />
+            <div class="editUserRow">
+                <div class="editUserInputLabel"><label for="username">Username</label></div>
+                <div class="editUserInputField"><input type="text" id="username" name="username" th:value="${username}"/></div>
+            </div>
+            <div class="editUserRow">
+                <div class="editUserInputLabel"><label for="password">Password</label></div>
+                <div class="editUserInputField"><input type="text" id="password" name="email" th:value="${email}"/></div>
+            </div>
+            <div class="editUserRow">
+                <div class="editUserInputLabel"><label for="ipAddress">IpAddress</label></div>
+                <div class="editUserInputField"><input type="text" id="ipAddress" name="ipAddress" th:value="${ipAddress}"/></div>
+            </div>
+            <div class="editUserRow">
+                <div class="editUserInputLabel"><label for="loginDttm">Login Date</label></div>
+                <div class="editUserInputField"><input type="date" id="loginDttm" name="loginDttm" th:value="${loginDttm}"/></div>
+            </div>
+            <div class="editUserRow">
+                <div class="editUserInputLabel"><label for="accountType">UserType</label></div>
+                <div class="editUserInputField">
+                    <select id="accountType" name="accountType">
+                        <th:block th:each="accountTypeValue : ${accountTypeFilterValues}">
+                            <option th:text="${accountTypeValue}" th:selected="${accountTypeValue} == ${accountType}" />
+                        </th:block>
+                    </select>
+                </div>
+            </div>
+            <div class="editUserRow">
+                <div class="editUserInputLabel"><label for="banned">Banned</label></div>
+                <div class="editUserInputField"><input type="text" id="banned" name="banned" th:value="${banned}"/></div>
+            </div>
+            <div class="editUserRow">
+                <div class="editUserInputLabel"><label for="comments">Comments</label></div>
+                <div class="editUserInputField"><input type="text" id="comments" name="comments" th:value="${comments}"/></div>
+            </div>
+            <div class="editUserRow">
+                <div class="editUserInputField">
+                    <button type="button">Update</button>
+                    <button type="button">Ban</button>
+                    <button type="button">Dev</button>
+                </div>
+            </div>
+
+            <div class="machinePanel">
+                <p>Machines</p>
+                <hr />
+
+                <table id="machineTable" class="order-table table">
+                    <thead>
+                    <tr class="headerRow">
+                        <th:block th:each="header : ${headerRow}">
+                            <td th:text="${header.name}"></td>
+                        </th:block>
+                    </tr>
+                    </thead>
+                    <tr th:each="machine : ${machines}">
+                        <th:block th:each="value : ${machine.values}">
+                            <td th:text="${value}"></td>
+                        </th:block>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

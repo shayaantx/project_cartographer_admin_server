@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Project Cartographer Admin</title>
+    <link th:href="@{/css/common.css}" rel="stylesheet" />
+    <script type="text/javascript" th:src="@{/js/jquery-3.3.1.js}" />
+    <script type="text/javascript" th:src="@{/js/common.js}" />
+    <script type="text/javascript" th:src="@{/js/filter.js}" />
+    <script type="text/javascript">
+        initCommonJs();
+    </script>
+</head>
+<body>
+<div class="banner">
+    <a class="navbar-brand" href="https://cartographer.online/">
+        <img src="https://cartographer.online/h2pc-api/h2pc_logo.png" class="center" width="48px" /> Project Cartographer Administration
+    </a>
+</div>
+<div class="content">
+    <div class="verticalnavbar">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/user">Edit User</a></li>
+            <li><a class="active" href="/users">All Users</a></li>
+            <li><a href="/servers">Servers</a></li>
+        </ul>
+    </div>
+    <div class="pageContent">
+        <br />
+        <p>Warning! this page can be slow from the browser</p>
+        <input type="text" class="light-table-filter" data-table="order-table" id="filter" name="filter" placeholder="Search"/>
+        <hr />
+        <table id="userTable" class="order-table table">
+            <thead>
+                <tr class="headerRow">
+                    <th:block th:each="header : ${headerRow}">
+                        <td th:text="${header.name}"></td>
+                    </th:block>
+                </tr>
+            </thead>
+            <tr th:each="user : ${users}">
+                <th:block th:each="value : ${user.values}">
+                    <td th:text="${value}"></td>
+                </th:block>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>
