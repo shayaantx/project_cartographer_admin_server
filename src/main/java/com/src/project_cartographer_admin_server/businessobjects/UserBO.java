@@ -13,9 +13,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -81,33 +81,7 @@ public class UserBO {
                 }
             }
             if (user != null) {
-                modelAndView.addObject("username", user.getUsername());
-                modelAndView.addObject("email", user.getEmail());
-                modelAndView.addObject("ipAddress", user.getIpAddress());
-                modelAndView.addObject("loginDttm", user.getLastLoginDttm() != null ? DATE_FORMAT.format(user.getLastLoginDttm()) : null);
-                modelAndView.addObject("accountType", user.getUserAccountType().name());
-                modelAndView.addObject("accountTypeFilterValues", getAccountTypeFilterValues());
-                modelAndView.addObject("banned", user.getUserAccountType().equals(UserAccountType.NORMAL_CHEATER));
-
-                List<Column> headerRow = new ArrayList<>();
-                List<Row> machines = new ArrayList<>();
-                headerRow.add(new Column("Id"));
-                headerRow.add(new Column("serial"));
-                headerRow.add(new Column("link"));
-                headerRow.add(new Column("banned"));
-                headerRow.add(new Column("comments"));
-                headerRow.add(new Column("actions"));
-                for (Machine machine : user.getMachines()) {
-                    List<String> values = new ArrayList<>();
-                    values.add(machine.getComp_id().toString());
-                    values.add(machine.getSerial());
-                    values.add(machine.getCompLink().toString());
-                    values.add(String.valueOf(machine.isBanned()));
-                    values.add(machine.getComments());
-                    machines.add(new Row(values));
-                }
-                modelAndView.addObject("headerRow", headerRow);
-                modelAndView.addObject("machines", machines);
+                fillUserTransaction(modelAndView, user);
                 hasUser = true;
             }
         } catch (Exception e) {
@@ -116,6 +90,38 @@ public class UserBO {
         }
         modelAndView.addObject("hasUser", hasUser);
         return modelAndView;
+    }
+
+    private static void fillUserTransaction(ModelAndView modelAndView, User user) {
+        modelAndView.addObject("id", user.getUserId());
+        modelAndView.addObject("username", user.getUsername());
+        modelAndView.addObject("email", user.getEmail());
+        modelAndView.addObject("ipAddress", user.getIpAddress());
+        modelAndView.addObject("loginDttm", user.getLastLoginDttm() != null ? DATE_FORMAT.format(user.getLastLoginDttm()) : null);
+        modelAndView.addObject("accountType", user.getUserAccountType().name());
+        modelAndView.addObject("accountTypeFilterValues", getAccountTypeFilterValues());
+        modelAndView.addObject("banned", user.getUserAccountType().equals(UserAccountType.NORMAL_CHEATER));
+
+        List<Column> headerRow = new ArrayList<>();
+        List<Row> machines = new ArrayList<>();
+        headerRow.add(new Column("Id"));
+        headerRow.add(new Column("serial"));
+        headerRow.add(new Column("link"));
+        headerRow.add(new Column("machineBanned"));
+        headerRow.add(new Column("comments"));
+        headerRow.add(new Column("actions"));
+        for (Machine machine : user.getMachines()) {
+            List<String> values = new ArrayList<>();
+            values.add(machine.getComp_id().toString());
+            values.add(machine.getSerial());
+            values.add(machine.getCompLink().toString());
+            values.add(String.valueOf(machine.isBanned()));
+            values.add(machine.getComments());
+            values.add(machine.isBanned() ? "unban" : "ban");
+            machines.add(new Row(values));
+        }
+        modelAndView.addObject("headerRow", headerRow);
+        modelAndView.addObject("machines", machines);
     }
 
     private static List<String> getAccountTypeFilterValues() {
@@ -130,8 +136,22 @@ public class UserBO {
         return accountTypeFilterValues;
     }
 
+    @Transactional
     public ModelAndView banUser(Integer userIdParam) {
-        return null;
+        User user = entityManager.getReference(User.class, userIdParam);
+        user.setUserAccountType(UserAccountType.NORMAL_CHEATER);
+        ModelAndView modelAndView = loadUser(userIdParam, null, null);
+        modelAndView.addObject("success", "Banned user");
+        return modelAndView;
+    }
+
+    @Transactional
+    public ModelAndView unbanUser(Integer userIdParam) {
+        User user = entityManager.getReference(User.class, userIdParam);
+        user.setUserAccountType(UserAccountType.NORMAL_PUBLIC);
+        ModelAndView modelAndView = loadUser(userIdParam, null, null);
+        modelAndView.addObject("success", "Unbanned user");
+        return modelAndView;
     }
 
     private static class Column {

@@ -6,6 +6,14 @@ function lookupUserByUsername(username) {
     window.location.replace(window.location.protocol + "user?username=" + username);
 }
 
+function banUserById(id) {
+    window.location.replace(window.location.protocol + "banUser?id=" + id);
+}
+
+function unbanUserById(id) {
+    window.location.replace(window.location.protocol + "unbanUser?id=" + id);
+}
+
 function initCommonJs() {
     $(document).ready(function () {
         $("#userTable tr").click(function(){
@@ -26,6 +34,16 @@ function initCommonJs() {
             if (username) {
                 lookupUserByUsername(username);
             }
+        });
+
+        $("#banUser").click(function() {
+            var id = $('#id').val();
+            banUserById(id);
+        });
+
+        $("#unbanUser").click(function() {
+            var id = $('#id').val();
+            unbanUserById(id);
         });
     });
 }

@@ -108,4 +108,22 @@ public class Machine {
     public void setUsers(Set<User> users) {
         this.users = users;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Machine machine = (Machine) o;
+
+        if (comp_id != null ? !comp_id.equals(machine.comp_id) : machine.comp_id != null) return false;
+        return serial != null ? serial.equals(machine.serial) : machine.serial == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = comp_id != null ? comp_id.hashCode() : 0;
+        result = 31 * result + (serial != null ? serial.hashCode() : 0);
+        return result;
+    }
 }

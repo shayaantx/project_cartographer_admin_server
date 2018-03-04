@@ -50,6 +50,10 @@
             <p>Edit User</p>
             <hr />
             <div class="editUserRow">
+                <div class="editUserInputLabel"><label for="id">User Id</label></div>
+                <div class="editUserInputField"><input type="text" id="id" name="id" th:value="${id}" readonly="true"/></div>
+            </div>
+            <div class="editUserRow">
                 <div class="editUserInputLabel"><label for="username">Username</label></div>
                 <div class="editUserInputField"><input type="text" id="username" name="username" th:value="${username}"/></div>
             </div>
@@ -86,10 +90,10 @@
             <div class="editUserRow">
                 <div class="editUserInputField">
                     <div class="userButtons" th:switch="${banned}">
-                        <button type="button" th:case="false">Ban</button>
-                        <button type="button" th:case="true">Unban</button>
-                        <button type="button" >Dev</button>
-                        <button type="button" >Update</button>
+                        <button id="banUser" type="button" th:case="false">Ban</button>
+                        <button id="unbanUser" type="button" th:case="true">Unban</button>
+                        <button id="devUser" type="button" >Dev</button>
+                        <button id="updateUser" type="button" >Update</button>
                     </div>
                 </div>
             </div>
@@ -108,14 +112,12 @@
                     </thead>
                     <tr th:each="machine : ${machines}">
                         <th:block th:each="value : ${machine.values}">
-                            <td th:text="${value}"></td>
-                        </th:block>
-                        <td>
-                            <div class="actionButtons" th:switch="${banned}">
-                                <button type="button" th:case="${false}">Ban</button>
-                                <button type="button" th:case="${true}">Unban</button>
+                            <div class="machines" th:switch="${value}">
+                                <td th:case="unban"><button type="button">Unban</button></td>
+                                <td th:case="ban"><button type="button">Ban</button></td>
+                                <td th:case="*"><p th:text="${value}"></p></td>
                             </div>
-                        </td>
+                        </th:block>
                     </tr>
                 </table>
                 <br/>

@@ -136,6 +136,11 @@ hr {
     font-size:1em;
 }
 
+.success {
+    color: #D8000C;
+    background-color: #7CFC00;
+    font-size:1em;
+}
 input[readonly]
 {
     background-color: #D3D3D3;

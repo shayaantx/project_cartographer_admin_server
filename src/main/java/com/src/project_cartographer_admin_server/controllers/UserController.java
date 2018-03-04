@@ -26,9 +26,14 @@ public class UserController {
         return userBO.loadUser(userIdParam, username, email);
     }
 
-    @RequestMapping(value="/ban")
+    @RequestMapping(value="/banUser")
     public ModelAndView banUser(@RequestParam(value = "id") Integer userIdParam) {
         return userBO.banUser(userIdParam);
+    }
+
+    @RequestMapping(value="/unbanUser")
+    public ModelAndView unbanUser(@RequestParam(value = "id") Integer userIdParam) {
+        return userBO.unbanUser(userIdParam);
     }
 
     @Autowired
