@@ -4,6 +4,8 @@ import com.src.project_cartographer_admin_server.models.Machine;
 import com.src.project_cartographer_admin_server.models.User;
 import com.src.project_cartographer_admin_server.models.UserAccountType;
 import com.src.project_cartographer_admin_server.models.UserRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
@@ -94,6 +96,7 @@ public class UserBO {
                 headerRow.add(new Column("link"));
                 headerRow.add(new Column("banned"));
                 headerRow.add(new Column("comments"));
+                headerRow.add(new Column("actions"));
                 for (Machine machine : user.getMachines()) {
                     List<String> values = new ArrayList<>();
                     values.add(machine.getComp_id().toString());
@@ -108,7 +111,7 @@ public class UserBO {
                 hasUser = true;
             }
         } catch (Exception e) {
-            e.printStackTrace(System.out);
+            LOGGER.error("Error looking up user", e);
             modelAndView.addObject("error", e.getMessage());
         }
         modelAndView.addObject("hasUser", hasUser);
@@ -146,6 +149,7 @@ public class UserBO {
     }
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static final Logger LOGGER = LogManager.getLogger();
 
     @Autowired
     private UserRepository userRepository;

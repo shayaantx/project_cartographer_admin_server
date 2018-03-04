@@ -24,3 +24,6 @@ nbdist/
 .nb-gradle/
 mvnw
 *.cmd
+src/main/java/META-INF/MANIFEST.MF
+logs/server.log
+src/main/java/META-INF/MANIFEST.MF

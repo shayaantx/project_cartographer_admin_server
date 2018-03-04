@@ -54,16 +54,16 @@
                 <div class="editUserInputField"><input type="text" id="username" name="username" th:value="${username}"/></div>
             </div>
             <div class="editUserRow">
-                <div class="editUserInputLabel"><label for="password">Password</label></div>
-                <div class="editUserInputField"><input type="text" id="password" name="email" th:value="${email}"/></div>
+                <div class="editUserInputLabel"><label for="email">Email</label></div>
+                <div class="editUserInputField"><input type="text" id="email" name="email" th:value="${email}"/></div>
             </div>
             <div class="editUserRow">
                 <div class="editUserInputLabel"><label for="ipAddress">IpAddress</label></div>
-                <div class="editUserInputField"><input type="text" id="ipAddress" name="ipAddress" th:value="${ipAddress}"/></div>
+                <div class="editUserInputField"><input type="text" id="ipAddress" name="ipAddress" th:value="${ipAddress}" readonly="true"/></div>
             </div>
             <div class="editUserRow">
                 <div class="editUserInputLabel"><label for="loginDttm">Login Date</label></div>
-                <div class="editUserInputField"><input type="date" id="loginDttm" name="loginDttm" th:value="${loginDttm}"/></div>
+                <div class="editUserInputField"><input type="date" id="loginDttm" name="loginDttm" th:value="${loginDttm}" readonly="true"/></div>
             </div>
             <div class="editUserRow">
                 <div class="editUserInputLabel"><label for="accountType">UserType</label></div>
@@ -77,17 +77,20 @@
             </div>
             <div class="editUserRow">
                 <div class="editUserInputLabel"><label for="banned">Banned</label></div>
-                <div class="editUserInputField"><input type="text" id="banned" name="banned" th:value="${banned}"/></div>
+                <div class="editUserInputField"><input type="text" id="banned" name="banned" th:value="${banned}" readonly="true"/></div>
             </div>
             <div class="editUserRow">
                 <div class="editUserInputLabel"><label for="comments">Comments</label></div>
-                <div class="editUserInputField"><input type="text" id="comments" name="comments" th:value="${comments}"/></div>
+                <div class="editUserInputField"><textarea  rows="4" cols="50" id="comments" name="comments" th:value="${comments}"/></div>
             </div>
             <div class="editUserRow">
                 <div class="editUserInputField">
-                    <button type="button">Update</button>
-                    <button type="button">Ban</button>
-                    <button type="button">Dev</button>
+                    <div class="userButtons" th:switch="${banned}">
+                        <button type="button" th:case="false">Ban</button>
+                        <button type="button" th:case="true">Unban</button>
+                        <button type="button" >Dev</button>
+                        <button type="button" >Update</button>
+                    </div>
                 </div>
             </div>
 
@@ -107,8 +110,16 @@
                         <th:block th:each="value : ${machine.values}">
                             <td th:text="${value}"></td>
                         </th:block>
+                        <td>
+                            <div class="actionButtons" th:switch="${banned}">
+                                <button type="button" th:case="${false}">Ban</button>
+                                <button type="button" th:case="${true}">Unban</button>
+                            </div>
+                        </td>
                     </tr>
                 </table>
+                <br/>
+                <button type="button">Ban All</button>
             </div>
         </div>
     </div>

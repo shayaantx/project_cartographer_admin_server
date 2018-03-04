@@ -135,3 +135,8 @@ hr {
     background-color: #FFD2D2;
     font-size:1em;
 }
+
+input[readonly]
+{
+    background-color: #D3D3D3;
+}

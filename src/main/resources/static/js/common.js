@@ -1,30 +1,3 @@
-
-function getData() {
-    $.ajax({
-        type: "GET",
-        url: "/getAllUsers",
-        dataType: "json",
-        success: function(response) {
-            var i = 0;
-            var table = "<table>";
-            table += "<tr><td>UserId</td><td>Username</td><td>Email</td></tr>";
-            for (i = 0; i < response.length; i++) {
-                //{"userId":1,"username":"Glitchy Scripts","email":"glitchyscripts@hotmail.com"}
-                var user = response[i];
-                table += "<tr>";
-                table += "<td>" + user["userId"] + "</td>";
-                table += "<td>" + user["username"] + "</td>";
-                table += "<td>" + user["email"] + "</td>";
-                table += "</tr>";
-            }
-            table += "</table>";
-            $('#allUsers').append(table);
-        }
-    });
-
-    return false;
-}
-
 function lookupUserById(id) {
     window.location.replace(window.location.protocol + "user?id=" + id);
 }
@@ -34,7 +7,6 @@ function lookupUserByUsername(username) {
 }
 
 function initCommonJs() {
-
     $(document).ready(function () {
         $("#userTable tr").click(function(){
             var id = $(this).find('td:first').html();
