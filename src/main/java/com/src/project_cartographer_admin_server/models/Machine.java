@@ -13,8 +13,17 @@ public class Machine {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer comp_id;
 
-    @Column(name = "serial")
-    private String serial;
+    @Column(name = "serial_1")
+    private String serial1;
+
+    @Column(name = "serial_2")
+    private String serial2;
+
+    @Column(name = "serial_3")
+    private String serial3;
+
+    @Column(name = "op_sys")
+    private String operatingSystem;
 
     @Column(name = "comp_link")
     private Integer compLink;
@@ -37,20 +46,44 @@ public class Machine {
     @ManyToMany(mappedBy = "machines")
     private Set<User> users;
 
+    public String getOperatingSystem() {
+        return operatingSystem;
+    }
+
+    public void setOperatingSystem(String operatingSystem) {
+        this.operatingSystem = operatingSystem;
+    }
+
+    public String getSerial1() {
+        return serial1;
+    }
+
+    public void setSerial1(String serial1) {
+        this.serial1 = serial1;
+    }
+
+    public String getSerial2() {
+        return serial2;
+    }
+
+    public void setSerial2(String serial2) {
+        this.serial2 = serial2;
+    }
+
+    public String getSerial3() {
+        return serial3;
+    }
+
+    public void setSerial3(String serial3) {
+        this.serial3 = serial3;
+    }
+
     public Integer getComp_id() {
         return comp_id;
     }
 
     public void setComp_id(Integer comp_id) {
         this.comp_id = comp_id;
-    }
-
-    public String getSerial() {
-        return serial;
-    }
-
-    public void setSerial(String serial) {
-        this.serial = serial;
     }
 
     public Integer getCompLink() {
@@ -116,14 +149,11 @@ public class Machine {
 
         Machine machine = (Machine) o;
 
-        if (comp_id != null ? !comp_id.equals(machine.comp_id) : machine.comp_id != null) return false;
-        return serial != null ? serial.equals(machine.serial) : machine.serial == null;
+        return comp_id != null ? comp_id.equals(machine.comp_id) : machine.comp_id == null;
     }
 
     @Override
     public int hashCode() {
-        int result = comp_id != null ? comp_id.hashCode() : 0;
-        result = 31 * result + (serial != null ? serial.hashCode() : 0);
-        return result;
+        return comp_id != null ? comp_id.hashCode() : 0;
     }
 }

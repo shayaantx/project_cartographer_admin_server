@@ -3,6 +3,12 @@
 <head>
     <title>Project Cartographer Admin</title>
     <link th:href="@{/css/common.css}" rel="stylesheet" />
+    <script type="text/javascript" th:src="@{/js/jquery-3.3.1.js}" />
+    <script type="text/javascript" th:src="@{/js/common.js}" />
+    <script type="text/javascript" th:src="@{/js/filter.js}" />
+    <script type="text/javascript">
+        initCommonJs();
+    </script>
 </head>
 <body>
 <div class="banner">
@@ -10,17 +16,17 @@
         <img src="https://cartographer.online/h2pc-api/h2pc_logo.png" class="center" width="48px" /> Project Cartographer Administration
     </a>
 </div>
-
 <div class="content">
     <div class="verticalnavbar">
         <ul>
-            <li><a class="active" href="/">Home</a></li>
+            <li><a href="/">Home</a></li>
+            <li><a href="/user">Edit User</a></li>
             <li><a href="/users">Users</a></li>
-            <li><a href="/servers">Servers</a></li>
+            <li><a class="active" href="/emails">Emails</a></li>
         </ul>
     </div>
     <div class="pageContent">
-        <p>TODO: place to manage master, relay servers</p>
+        <p>TODO: place to manage blacklisted emails</p>
     </div>
 </div>
 </body>

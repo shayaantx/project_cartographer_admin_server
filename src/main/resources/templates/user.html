@@ -22,7 +22,7 @@
             <li><a href="/">Home</a></li>
             <li><a class="active" href="/user">Edit User</a></li>
             <li><a href="/users">Users</a></li>
-            <li><a href="/servers">Servers</a></li>
+            <li><a href="/emails">Emails</a></li>
         </ul>
     </div>
     <div class="pageContent" th:switch="${hasUser}">
@@ -85,21 +85,20 @@
             </div>
             <div class="editUserRow">
                 <div class="editUserInputLabel"><label for="comments">Comments</label></div>
-                <div class="editUserInputField"><textarea  rows="4" cols="50" id="comments" name="comments" th:value="${comments}"/></div>
+                <div class="editUserInputField"><textarea rows="4" cols="50" id="comments" name="comments" th:text="${comments}" /></div>
             </div>
             <div class="editUserRow">
                 <div class="editUserInputField">
                     <div class="userButtons" th:switch="${banned}">
                         <button id="banUser" type="button" th:case="false">Ban</button>
                         <button id="unbanUser" type="button" th:case="true">Unban</button>
-                        <button id="devUser" type="button" >Dev</button>
                         <button id="updateUser" type="button" >Update</button>
                     </div>
                 </div>
             </div>
 
             <div class="machinePanel">
-                <p>Machines</p>
+                <p>Edit Machines</p>
                 <hr />
 
                 <table id="machineTable" class="order-table table">
@@ -113,15 +112,15 @@
                     <tr th:each="machine : ${machines}">
                         <th:block th:each="value : ${machine.values}">
                             <div class="machines" th:switch="${value}">
-                                <td th:case="unban"><button type="button">Unban</button></td>
-                                <td th:case="ban"><button type="button">Ban</button></td>
+                                <td th:case="unban"><button id="unbanMachine" type="button">Unban</button></td>
+                                <td th:case="ban"><button id="banMachine" type="button">Ban</button></td>
                                 <td th:case="*"><p th:text="${value}"></p></td>
                             </div>
                         </th:block>
                     </tr>
                 </table>
                 <br/>
-                <button type="button">Ban All</button>
+                <button id="banAllMachines" type="button">Ban All</button>
             </div>
         </div>
     </div>

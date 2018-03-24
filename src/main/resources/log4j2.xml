@@ -21,19 +21,13 @@
 
     <Loggers>
         <!-- Log everything in custom package -->
-        <Logger name="com.src.project_cartographer_admin_server" level="debug" additivity="false">
+        <Logger name="com.src.project_cartographer_admin_server" level="info" additivity="false">
             <AppenderRef ref="Console" />
             <AppenderRef ref="RollingFile" />
         </Logger>
 
-        <!-- Log everything in Spring Boot -->
-        <Logger name="org.springframework.boot" level="debug" additivity="false">
-            <AppenderRef ref="Console" />
-            <AppenderRef ref="RollingFile" />
-        </Logger>
-
-        <!-- Log everything in Spring Core -->
-        <Logger name="org.springframework.core" level="debug" additivity="false">
+        <!-- Log everything in Spring -->
+        <Logger name="org.springframework" level="info" additivity="false">
             <AppenderRef ref="Console" />
             <AppenderRef ref="RollingFile" />
         </Logger>
