@@ -10,12 +10,15 @@ import com.src.project_cartographer_admin_server.transactions.FilterResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -221,6 +224,14 @@ public class UserBO {
         return modelAndView;
     }
 
+    public org.springframework.security.core.userdetails.User getUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            return null;
+        }
+        return (org.springframework.security.core.userdetails.User)authentication.getPrincipal();
+    }
+
     @Component
     public class TransactionHelper {
         @Transactional(value = Transactional.TxType.REQUIRES_NEW)
@@ -230,6 +241,7 @@ public class UserBO {
             for (Machine machine : machineSet) {
                 machine.setBanned(true);
             }
+            LOGGER_AUDIT.info("User " + getUser().getUsername() + " banned users " + user.getUsername() + " machines");
         }
 
         @Transactional(value = Transactional.TxType.REQUIRES_NEW)
@@ -239,6 +251,7 @@ public class UserBO {
             for (Machine machine : machineSet) {
                 if (machine.getComp_id().equals(machineId)) {
                     machine.setBanned(true);
+                    LOGGER_AUDIT.info("User " + getUser().getUsername() + " banned users " + user.getUsername() + " machine id " + machine.getComp_id());
                     return;
                 }
             }
@@ -252,6 +265,7 @@ public class UserBO {
             for (Machine machine : machineSet) {
                 if (machine.getComp_id().equals(machineId)) {
                     machine.setBanned(false);
+                    LOGGER_AUDIT.info("User " + getUser().getUsername() + " unbanned users " + user.getUsername() + " machine id " + machine.getComp_id());
                     return;
                 }
             }
@@ -262,12 +276,14 @@ public class UserBO {
         public void unbanUser(Integer userIdParam) {
             User user = entityManager.getReference(User.class, userIdParam);
             user.setUserAccountType(UserAccountType.NORMAL_PUBLIC);
+            LOGGER_AUDIT.info("User " + getUser().getUsername() + " unbanned user " + user.getUsername());
         }
 
         @Transactional(value = Transactional.TxType.REQUIRES_NEW)
         public void banUser(Integer userIdParam) {
             User user = entityManager.getReference(User.class, userIdParam);
             user.setUserAccountType(UserAccountType.NORMAL_CHEATER);
+            LOGGER_AUDIT.info("User " + getUser().getUsername() + " banned user " + user.getUsername());
         }
 
         @Transactional(value = Transactional.TxType.REQUIRES_NEW)
@@ -275,18 +291,22 @@ public class UserBO {
             User user = entityManager.getReference(User.class, userIdParam);
             if (!user.getUsername().equalsIgnoreCase(username)) {
                 user.setUsername(username);
+                LOGGER_AUDIT.info("User " + getUser().getUsername() + " changed " + user.getUsername() + " username");
             }
             if (!email.equalsIgnoreCase(user.getEmail())) {
                 user.setEmail(email);
+                LOGGER_AUDIT.info("User " + getUser().getUsername() + " changed " + user.getUsername() + " email");
             }
             if (userType != null && !userType.isEmpty()) {
                 UserAccountType userAccountType = UserAccountType.valueOf(userType);
                 if (!userAccountType.equals(user.getUserAccountType())) {
                     user.setUserAccountType(userAccountType);
+                    LOGGER_AUDIT.info("User " + getUser().getUsername() + " changed " + user.getUsername() + " account type");
                 }
             }
             if (comments != null && !comments.isEmpty() && !comments.equalsIgnoreCase(user.getComments())) {
                 user.setComments(comments);
+                LOGGER_AUDIT.info("User " + getUser().getUsername() + " changed " + user.getUsername() + " comments");
             }
         }
         @PersistenceContext
@@ -295,6 +315,7 @@ public class UserBO {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER_AUDIT = LogManager.getLogger("Audit");
 
     @Autowired
     private TransactionHelper transactionHelper;

@@ -5,7 +5,7 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{yyyy-MMM-dd HH:mm:ss a} [%t] %-5level %logger{36} - %msg%n" />
         </Console>
-        <RollingFile name="RollingFile">
+        <RollingFile name="ServerLog">
             <FileName>logs/server.log</FileName>
             <FilePattern>logs/%d{yyyy-MM-dd-hh-mm}.log.zip</FilePattern>
             <PatternLayout>
@@ -17,24 +17,40 @@
 
             <DefaultRolloverStrategy max="10" />
         </RollingFile>
+
+        <RollingFile name="AuditLog">
+            <FileName>logs/audit.log</FileName>
+            <FilePattern>logs/%d{yyyy-MM-dd-hh-mm}.log.zip</FilePattern>
+            <PatternLayout>
+                <Pattern>%d{yyyy-MMM-dd HH:mm:ss a} [%t] %-5level %logger{36} - %msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+
+            <DefaultRolloverStrategy max="20" />
+        </RollingFile>
     </Appenders>
 
     <Loggers>
+        <Logger name="Audit" level="info" additivity="false">
+            <AppenderRef ref="AuditLog" />
+        </Logger>
         <!-- Log everything in custom package -->
         <Logger name="com.src.project_cartographer_admin_server" level="info" additivity="false">
             <AppenderRef ref="Console" />
-            <AppenderRef ref="RollingFile" />
+            <AppenderRef ref="ServerLog" />
         </Logger>
 
         <!-- Log everything in Spring -->
         <Logger name="org.springframework" level="info" additivity="false">
             <AppenderRef ref="Console" />
-            <AppenderRef ref="RollingFile" />
+            <AppenderRef ref="ServerLog" />
         </Logger>
 
         <Root level="error">
             <AppenderRef ref="Console" />
-            <AppenderRef ref="RollingFile" />
+            <AppenderRef ref="ServerLog" />
         </Root>
 
     </Loggers>
