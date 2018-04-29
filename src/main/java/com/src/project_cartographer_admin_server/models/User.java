@@ -1,6 +1,7 @@
 package com.src.project_cartographer_admin_server.models;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Set;
 
@@ -19,8 +20,8 @@ public class User {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "last_login")
-    private Date lastLoginDttm;
+    @Column(name = "last_log")
+    private String lastLoginDttm;
 
     @Column(name = "user_ban_date")
     private Date userBanStartDate;
@@ -45,11 +46,11 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "comp_id"))
     private Set<Machine> machines;
 
-    public Date getLastLoginDttm() {
+    public String getLastLoginDttm() {
         return lastLoginDttm;
     }
 
-    public void setLastLoginDttm(Date lastLoginDttm) {
+    public void setLastLoginDttm(String lastLoginDttm) {
         this.lastLoginDttm = lastLoginDttm;
     }
 

@@ -21,6 +21,7 @@ import javax.transaction.Transactional;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -83,7 +84,8 @@ public class UserBO {
         modelAndView.addObject("username", user.getUsername());
         modelAndView.addObject("email", user.getEmail());
         modelAndView.addObject("ipAddress", user.getIpAddress());
-        modelAndView.addObject("loginDttm", user.getLastLoginDttm() != null ? DATE_FORMAT.format(user.getLastLoginDttm()) : null);
+        Date lastLoginDttm = getDttmFromEpocTime(user.getLastLoginDttm());
+        modelAndView.addObject("loginDttm", lastLoginDttm != null ? DATE_FORMAT.format(lastLoginDttm) : null);
         modelAndView.addObject("accountType", user.getUserAccountType().name());
         modelAndView.addObject("accountTypeFilterValues", getAccountTypeFilterValues());
         modelAndView.addObject("banned", user.getUserAccountType().equals(UserAccountType.NORMAL_CHEATER));
@@ -151,17 +153,28 @@ public class UserBO {
         return getErrorUser(userIdParam, "failed to unban user");
     }
 
+    private static Date getDttmFromEpocTime(String epocTimeStr) {
+        if (epocTimeStr != null) {
+            long epocTime = Long.parseLong(epocTimeStr);
+            if (epocTime > 0) {
+                return new Date(epocTime * 1000);
+            }
+        }
+        return null;
+    }
+
     @Transactional
     public FilterResponse searchForUser(String filterText) {
         //transform the user model into the transaction
         List<DisplayRow> users = new ArrayList<>();
         Iterable<User> allUsers = userDAO.getUserByFilterText(filterText);
         for (User user : allUsers) {
+            Date lastLoginDttm = getDttmFromEpocTime(user.getLastLoginDttm());
             List<String> values = new ArrayList<>();
             values.add(user.getUserId().toString());
             values.add(user.getUsername());
             values.add(user.getEmail());
-            values.add(user.getLastLoginDttm() != null ? DATE_FORMAT.format(user.getLastLoginDttm()) : null);
+            values.add(lastLoginDttm != null ? DATE_FORMAT.format(lastLoginDttm) : null);
             values.add(user.getIpAddress());
             values.add(user.getUserAccountType().name());
             values.add(user.getUserAccountType().equals(UserAccountType.NORMAL_CHEATER) ? "BANNED" : "");
@@ -313,7 +326,7 @@ public class UserBO {
         private EntityManager entityManager;
     }
 
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Logger LOGGER_AUDIT = LogManager.getLogger("Audit");
 
