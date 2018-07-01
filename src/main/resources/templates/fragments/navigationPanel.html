@@ -1,0 +1,10 @@
+<div class="verticalnavbar" th:fragment="navPanel(selected)">
+    <ul>
+        <li><a th:classappend="${selected} == 'index' ? 'active' : ''" href="/">Home</a></li>
+        <li><a th:classappend="${selected} == 'user' ? 'active' : ''" href="/user">Edit User</a></li>
+        <li><a th:classappend="${selected} == 'newUsers' ? 'active' : ''" href="/newUsers">New Users</a></li>
+        <li><a th:classappend="${selected} == 'users' ? 'active' : ''" href="/users">Users</a></li>
+        <li><a th:classappend="${selected} == 'emails' ? 'active' : ''" href="/emails">Emails</a></li>
+        <li><a href="/logout">Logout</a></li>
+    </ul>
+</div>

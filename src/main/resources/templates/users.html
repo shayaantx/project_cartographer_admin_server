@@ -11,24 +11,12 @@
     </script>
 </head>
 <body>
-<div class="banner">
-    <a class="navbar-brand" href="https://cartographer.online/">
-        <img src="https://cartographer.online/h2pc-api/h2pc_logo.png" class="center" width="48px" /> Project Cartographer Administration
-    </a>
-</div>
+<div th:replace="fragments/bannerPanel"></div>
+
 <div class="content">
-    <div class="verticalnavbar">
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/user">Edit User</a></li>
-            <li><a class="active" href="/users">Users</a></li>
-            <li><a href="/emails">Emails</a></li>
-        </ul>
-    </div>
+    <div th:replace="fragments/navigationPanel :: navPanel(selected='users')"></div>
     <div class="pageContent">
-        <!-- TODO: convert into common fragment -->
-        <meta name="_csrf" id="_csrf" th:content="${_csrf.token}"/>
-        <meta name="_csrf_header" id="_csrf_header" th:content="${_csrf.headerName}"/>
+        <div th:replace="fragments/csrf"></div>
         <br />
         <p>Warning! this page can be slow from the browser</p>
         <input type="text" id="filterText" name="filterText" placeholder="Search"/>

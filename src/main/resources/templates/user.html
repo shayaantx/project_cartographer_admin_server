@@ -10,21 +10,11 @@
     </script>
 </head>
 <body>
-<div class="banner">
-    <a class="navbar-brand" href="https://cartographer.online/">
-        <img src="https://cartographer.online/h2pc-api/h2pc_logo.png" class="center" width="48px" /> Project Cartographer Administration
-    </a>
-</div>
+<div th:replace="fragments/bannerPanel"></div>
+
 
 <div class="content">
-    <div class="verticalnavbar">
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a class="active" href="/user">Edit User</a></li>
-            <li><a href="/users">Users</a></li>
-            <li><a href="/emails">Emails</a></li>
-        </ul>
-    </div>
+    <div th:replace="fragments/navigationPanel :: navPanel(selected='user')"></div>
     <div class="pageContent" th:switch="${hasUser}">
         <div class="success"><p th:text="${success}"></p></div>
         <div class="error"><p th:text="${error}"></p></div>
@@ -112,8 +102,8 @@
                     <tr th:each="machine : ${machines}">
                         <th:block th:each="value : ${machine.values}">
                             <div class="machines" th:switch="${value}">
-                                <td th:case="unban"><button id="unbanMachine" type="button">Unban</button></td>
-                                <td th:case="ban"><button id="banMachine" type="button">Ban</button></td>
+                                <td th:case="unban"><button class="unbanMachine" type="button">Unban</button></td>
+                                <td th:case="ban"><button class="banMachine" type="button">Ban</button></td>
                                 <td th:case="*"><p th:text="${value}"></p></td>
                             </div>
                         </th:block>

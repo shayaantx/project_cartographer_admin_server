@@ -3,11 +3,11 @@ function lookupUserById(id) {
 }
 
 function lookupUserByUsername(username) {
-    window.location.replace(window.location.protocol + "user?username=" + username);
+    window.location.replace(window.location.protocol + "user?username=" + encodeURIComponent(username));
 }
 
-function banUserById(id) {
-    window.location.replace(window.location.protocol + "banUser?id=" + id);
+function banUserById(id, comments) {
+    window.location.replace(window.location.protocol + "banUser?id=" + id + "&comments=" + encodeURIComponent(comments));
 }
 
 function banMachineById(userId, machineId) {
@@ -22,12 +22,16 @@ function banAllMachines(userId) {
     window.location.replace(window.location.protocol + "banAllMachines?userId=" + userId);
 }
 
-function unbanUserById(id) {
-    window.location.replace(window.location.protocol + "unbanUser?id=" + id);
+function unbanUserById(id, comments) {
+    window.location.replace(window.location.protocol + "unbanUser?id=" + id + "&comments=" + encodeURIComponent(comments));
 }
 
 function updateUser(id, username, email, userType, comments) {
-    window.location.replace(window.location.protocol + "updateUser?id=" + id + "&username=" + username + "&email=" + email + "&userType=" + userType + "&comments=" + comments);
+    window.location.replace(window.location.protocol + "updateUser?id=" + id + "&username=" + encodeURIComponent(username) + "&email=" + encodeURIComponent(email) + "&userType=" + userType + "&comments=" + encodeURIComponent(comments));
+}
+
+function activateUser(validationToken) {
+    window.location.replace(window.location.protocol + "activateUser?validationToken=" + encodeURIComponent(validationToken));
 }
 
 function searchForUser() {
@@ -101,16 +105,17 @@ function initCommonJs() {
 
         $("#banUser").click(function() {
             var id = $('#id').val();
-            banUserById(id);
+            var comments = $('#comments').val();
+            banUserById(id, comments);
         });
 
-        $("#banMachine").click(function() {
+        $(".banMachine").click(function() {
             var userId = $('#id').val();
             var machineId = $(this).parent().parent().find('td:first').children().html();
             banMachineById(userId, machineId);
         });
 
-        $("#unbanMachine").click(function() {
+        $(".unbanMachine").click(function() {
             var userId = $('#id').val();
             var machineId = $(this).parent().parent().find('td:first').children().html();
             unbanMachineById(userId, machineId);
@@ -123,7 +128,8 @@ function initCommonJs() {
 
         $("#unbanUser").click(function() {
             var id = $('#id').val();
-            unbanUserById(id);
+            var comments = $('#comments').val();
+            unbanUserById(id, comments);
         });
 
         $("#updateUser").click(function() {
@@ -143,6 +149,11 @@ function initCommonJs() {
 
         $("#searchForUser").click(function() {
             searchForUser();
+        });
+
+        $(".activate").click(function() {
+            var validationToken = $(this).parent().parent().find('td:nth-child(2)').children().html()
+            activateUser(validationToken);
         });
     });
 }

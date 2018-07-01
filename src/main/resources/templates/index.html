@@ -5,21 +5,10 @@
     <link th:href="@{/css/common.css}" rel="stylesheet" />
 </head>
 <body>
-<div class="banner">
-    <a class="navbar-brand" href="https://cartographer.online/">
-        <img src="https://cartographer.online/h2pc-api/h2pc_logo.png" class="center" width="48px" /> Project Cartographer Administration
-    </a>
-</div>
+<div th:replace="fragments/bannerPanel"></div>
 
 <div class="content">
-    <div class="verticalnavbar">
-        <ul>
-            <li><a class="active" href="/">Home</a></li>
-            <li><a href="/user">Edit User</a></li>
-            <li><a href="/users">Users</a></li>
-            <li><a href="/emails">Emails</a></li>
-        </ul>
-    </div>
+    <div th:replace="fragments/navigationPanel :: navPanel(selected='index')"></div>
     <div class="pageContent">
         <p>Welcome to the admin portal, fuck you</p>
     </div>

@@ -33,14 +33,19 @@ public class UserController {
         return userBO.loadUser(userIdParam, username, email);
     }
 
+    @RequestMapping(value="/newUsers")
+    public ModelAndView getNewUsers() {
+        return userBO.getNewUsers();
+    }
+
     @RequestMapping(value="/banUser")
-    public ModelAndView banUser(@RequestParam(value = "id") Integer userIdParam) {
-        return userBO.banUser(userIdParam);
+    public ModelAndView banUser(@RequestParam(value = "id") Integer userIdParam, @RequestParam(value = "comments", required = false) String comments) {
+        return userBO.banUser(userIdParam, comments);
     }
 
     @RequestMapping(value="/unbanUser")
-    public ModelAndView unbanUser(@RequestParam(value = "id") Integer userIdParam) {
-        return userBO.unbanUser(userIdParam);
+    public ModelAndView unbanUser(@RequestParam(value = "id") Integer userIdParam, @RequestParam(value = "comments", required = false) String comments) {
+        return userBO.unbanUser(userIdParam, comments);
     }
 
     @RequestMapping(value="/banMachine")
@@ -66,6 +71,12 @@ public class UserController {
                                    @RequestParam(value = "comments", required = false) String comments) {
         return userBO.updateUser(userIdParam, username, email, userType, comments);
     }
+
+    @RequestMapping(value="/activateUser")
+    public ModelAndView activateUser(@RequestParam(value = "validationToken") String validationToken) {
+        return userBO.activateUser(validationToken);
+    }
+
 
     @Autowired
     private UserBO userBO;

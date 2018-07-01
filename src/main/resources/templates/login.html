@@ -5,11 +5,8 @@
     <link th:href="@{/css/common.css}" rel="stylesheet" />
 </head>
 <body>
-<div class="banner">
-    <a class="navbar-brand" href="https://cartographer.online/">
-        <img src="https://cartographer.online/h2pc-api/h2pc_logo.png" class="center" width="48px" /> Project Cartographer Administration
-    </a>
-</div>
+<div th:replace="fragments/bannerPanel"></div>
+
 <div th:if="${param.error}">
     Invalid username and password.
 </div>

@@ -1,5 +1,6 @@
 package com.src.project_cartographer_admin_server.dataaccessobjects;
 
+import com.src.project_cartographer_admin_server.models.NewUser;
 import com.src.project_cartographer_admin_server.models.User;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +36,20 @@ public class UserDAO {
             List<User> realUsers = new ArrayList<>();
             for (Object object : users) {
                 realUsers.add((User)object);
+            }
+            return realUsers;
+        }
+    }
+
+    public List<NewUser> getNewUsers() {
+        Query newUsers = entityManager.createQuery("select u from NewUser u");
+        List users = newUsers.getResultList();
+        if (users == null) {
+            return null;
+        } else {
+            List<NewUser> realUsers = new ArrayList<>();
+            for (Object object : users) {
+                realUsers.add((NewUser) object);
             }
             return realUsers;
         }

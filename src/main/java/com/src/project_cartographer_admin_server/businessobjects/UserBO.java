@@ -2,6 +2,7 @@ package com.src.project_cartographer_admin_server.businessobjects;
 
 import com.src.project_cartographer_admin_server.dataaccessobjects.UserDAO;
 import com.src.project_cartographer_admin_server.models.Machine;
+import com.src.project_cartographer_admin_server.models.NewUser;
 import com.src.project_cartographer_admin_server.models.User;
 import com.src.project_cartographer_admin_server.models.UserAccountType;
 import com.src.project_cartographer_admin_server.transactions.DisplayColumn;
@@ -9,6 +10,7 @@ import com.src.project_cartographer_admin_server.transactions.DisplayRow;
 import com.src.project_cartographer_admin_server.transactions.FilterResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,12 +20,16 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by shayaantx on 1/25/2018.
@@ -51,6 +57,26 @@ public class UserBO {
         return new ModelAndView("users")
                 .addObject("headerRow", headerRow)
                 .addObject("accountTypeFilters", accountTypeFilterValues);
+    }
+
+    public ModelAndView getNewUsers() {
+        List<DisplayColumn> headerRow = new ArrayList<>();
+        headerRow.add(new DisplayColumn("username"));
+        headerRow.add(new DisplayColumn("activationToken"));
+        headerRow.add(new DisplayColumn("actions"));
+
+        List<DisplayRow> users = new ArrayList<>();
+        Iterable<NewUser> newUsers = userDAO.getNewUsers();
+        for (NewUser newUser : newUsers) {
+            List<String> values = new ArrayList<>();
+            values.add(newUser.getUsername());
+            values.add(newUser.getValidationToken());
+            values.add("activateAction");
+            users.add(new DisplayRow(values));
+        }
+        return new ModelAndView("newUsers")
+                .addObject("headerRow", headerRow)
+                .addObject("newUsers", users);
     }
 
     public ModelAndView loadUser(Integer idParam, String username, String email) {
@@ -132,9 +158,9 @@ public class UserBO {
     }
 
     @Transactional
-    public ModelAndView banUser(Integer userIdParam) {
+    public ModelAndView banUser(Integer userIdParam, String comments) {
         try {
-            transactionHelper.banUser(userIdParam);
+            transactionHelper.banUser(userIdParam, comments);
             return getSuccesfulUser(userIdParam, "banned user");
         } catch (Exception e) {
             LOGGER.error("Error banning user", e);
@@ -143,9 +169,9 @@ public class UserBO {
     }
 
     @Transactional
-    public ModelAndView unbanUser(Integer userIdParam) {
+    public ModelAndView unbanUser(Integer userIdParam, String comments) {
         try {
-            transactionHelper.unbanUser(userIdParam);
+            transactionHelper.unbanUser(userIdParam, comments);
             return getSuccesfulUser(userIdParam, "unbanned user");
         } catch (Exception e) {
             LOGGER.error("Error unbanning user", e);
@@ -245,6 +271,32 @@ public class UserBO {
         return (org.springframework.security.core.userdetails.User)authentication.getPrincipal();
     }
 
+    @Transactional
+    public ModelAndView activateUser(String validationToken) {
+        try {
+            URL url = new URL("https://cartographer.online/activate1?key=" + validationToken);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+                String inputLine;
+                boolean success = false;
+                while ((inputLine = in.readLine()) != null) {
+                    if (inputLine.contains("Account Successfully Activated")) {
+                        LOGGER.info("Succesfully activated validation token " + validationToken);
+                        success = true;
+                    }
+                }
+                if (!success) {
+                    LOGGER.error("Could not activate token " + validationToken);
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.error("Error sending activate request");
+        }
+        return getNewUsers();
+    }
+
     @Component
     public class TransactionHelper {
         @Transactional(value = Transactional.TxType.REQUIRES_NEW)
@@ -286,16 +338,22 @@ public class UserBO {
         }
 
         @Transactional(value = Transactional.TxType.REQUIRES_NEW)
-        public void unbanUser(Integer userIdParam) {
+        public void unbanUser(Integer userIdParam, String comments) {
             User user = entityManager.getReference(User.class, userIdParam);
             user.setUserAccountType(UserAccountType.NORMAL_PUBLIC);
+            if (Strings.isNotBlank(comments)) {
+                user.setComments(comments);
+            }
             LOGGER_AUDIT.info("User " + getUser().getUsername() + " unbanned user " + user.getUsername());
         }
 
         @Transactional(value = Transactional.TxType.REQUIRES_NEW)
-        public void banUser(Integer userIdParam) {
+        public void banUser(Integer userIdParam, String comments) {
             User user = entityManager.getReference(User.class, userIdParam);
             user.setUserAccountType(UserAccountType.NORMAL_CHEATER);
+            if (Strings.isNotBlank(comments)) {
+                user.setComments(comments);
+            }
             LOGGER_AUDIT.info("User " + getUser().getUsername() + " banned user " + user.getUsername());
         }
 

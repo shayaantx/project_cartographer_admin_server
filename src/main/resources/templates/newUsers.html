@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Project Cartographer Admin</title>
+    <link th:href="@{/css/common.css}" rel="stylesheet" />
+    <script type="text/javascript" th:src="@{/js/jquery-3.3.1.js}" />
+    <script type="text/javascript" th:src="@{/js/common.js}" />
+    <script type="text/javascript" th:src="@{/js/filter.js}" />
+    <script type="text/javascript">
+        initCommonJs();
+    </script>
+</head>
+<body>
+<div th:replace="fragments/bannerPanel"></div>
+
+<div class="content">
+    <div th:replace="fragments/navigationPanel :: navPanel(selected='newUsers')"></div>
+    <div class="pageContent">
+
+        <p>Activate new user accounts</p>
+        <p>If you still see the new user account after clicking activate try refreshing, the delete happens during activation, but there could be some minor delay</p>
+        <hr />
+        <table id="newUserTable" class="order-table table">
+            <thead>
+            <tr class="headerRow">
+                <th:block th:each="header : ${headerRow}">
+                    <td th:text="${header.name}"></td>
+                </th:block>
+            </tr>
+            </thead>
+            <tr th:each="user : ${newUsers}">
+                <th:block th:each="value : ${user.values}">
+                    <div class="newUsers" th:switch="${value}">
+                        <td th:case="activateAction"><button class="activate" type="button">Activate</button></td>
+                        <td th:case="*"><p th:text="${value}"></p></td>
+                    </div>
+                </th:block>
+            </tr>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
