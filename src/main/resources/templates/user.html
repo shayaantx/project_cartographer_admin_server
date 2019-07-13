@@ -112,6 +112,27 @@
                 <br/>
                 <button id="banAllMachines" type="button">Ban All</button>
             </div>
+            <div class="linkedUsers">
+                <p>Linked Users</p>
+                <hr />
+
+                <table id="userTable" class="order-table table">
+                    <thead>
+                    <tr class="headerRow">
+                        <th:block th:each="header : ${linkedUsersHeader}">
+                            <td th:text="${header.name}"></td>
+                        </th:block>
+                    </tr>
+                    </thead>
+                    <tr th:each="user : ${users}">
+                        <th:block th:each="value : ${user.values}">
+                            <div class="users" th:switch="${value}">
+                                <td th:case="*"><p th:text="${value}"></p></td>
+                            </div>
+                        </th:block>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 </div>

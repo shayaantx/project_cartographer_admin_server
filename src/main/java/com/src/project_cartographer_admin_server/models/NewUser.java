@@ -9,27 +9,27 @@ import javax.persistence.Id;
  */
 @Entity
 public class NewUser {
-    public String getUsername() {
-        return username;
-    }
+  public String getUsername() {
+    return username;
+  }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
-    public String getValidationToken() {
-        return validationToken;
-    }
+  public String getValidationToken() {
+    return validationToken;
+  }
 
-    public void setValidationToken(String validationToken) {
-        this.validationToken = validationToken;
-    }
+  public void setValidationToken(String validationToken) {
+    this.validationToken = validationToken;
+  }
 
 
-    @Id
-    @Column(name = "username")
-    private String username;
+  @Id
+  @Column(name = "username")
+  private String username;
 
-    @Column(name = "validation_token")
-    private String validationToken;
+  @Column(name = "validation_token")
+  private String validationToken;
 }

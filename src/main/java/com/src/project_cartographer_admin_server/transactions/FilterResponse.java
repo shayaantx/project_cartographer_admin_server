@@ -6,13 +6,13 @@ import java.util.List;
  * Created by shayaantx on 3/24/2018.
  */
 public class FilterResponse {
-    public FilterResponse(List<DisplayRow> users) {
-        this.users = users;
-    }
+  public FilterResponse(List<DisplayRow> users) {
+    this.users = users;
+  }
 
-    public List<DisplayRow> getUsers() {
-        return users;
-    }
+  public List<DisplayRow> getUsers() {
+    return users;
+  }
 
-    private List<DisplayRow> users;
+  private List<DisplayRow> users;
 }

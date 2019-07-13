@@ -13,9 +13,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 @ActiveProfiles(profiles = "test")
 public class ProjectCartographerAdminServerApplicationTests {
-
-	@Test
-	public void contextLoads() {
-	}
-
+  @Test
+  public void contextLoads() {}
 }

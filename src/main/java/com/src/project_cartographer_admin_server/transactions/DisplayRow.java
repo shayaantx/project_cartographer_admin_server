@@ -6,9 +6,9 @@ import java.util.List;
  * Created by shayaantx on 3/24/2018.
  */
 public class DisplayRow {
-    public List<String> values;
+  public List<String> values;
 
-    public DisplayRow(List<String> values) {
-        this.values = values;
-    }
+  public DisplayRow(List<String> values) {
+    this.values = values;
+  }
 }
