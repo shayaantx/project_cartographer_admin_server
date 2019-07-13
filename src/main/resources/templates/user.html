@@ -127,7 +127,7 @@
                     <tr th:each="user : ${users}">
                         <th:block th:each="value : ${user.values}">
                             <div class="users" th:switch="${value}">
-                                <td th:case="*"><p th:text="${value}"></p></td>
+                                <td th:case="*" th:text="${value}" />
                             </div>
                         </th:block>
                     </tr>
