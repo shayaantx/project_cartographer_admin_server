@@ -1,14 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <title>Project Cartographer Admin</title>
-    <link th:href="@{/css/common.css}" rel="stylesheet" />
-    <script type="text/javascript" th:src="@{/js/jquery-3.3.1.js}" />
-    <script type="text/javascript" th:src="@{/js/common.js}" />
-    <script type="text/javascript" th:src="@{/js/filter.js}" />
-    <script type="text/javascript">
-        initCommonJs();
-    </script>
+    <div th:replace="fragments/header :: header"></div>
 </head>
 <body>
 <div th:replace="fragments/bannerPanel"></div>
@@ -16,7 +9,6 @@
 <div class="content">
     <div th:replace="fragments/navigationPanel :: navPanel(selected='users')"></div>
     <div class="pageContent">
-        <div th:replace="fragments/csrf"></div>
         <br />
         <p>Warning! this page can be slow from the browser</p>
         <input type="text" id="filterText" name="filterText" placeholder="Search"/>

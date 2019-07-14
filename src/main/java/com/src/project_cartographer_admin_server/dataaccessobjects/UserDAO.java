@@ -14,7 +14,7 @@ import java.util.*;
  * Created by shayaantx on 3/24/2018.
  */
 @Component
-public class UserDAO {
+public class UserDAO extends CommonDAO<User> {
   public List<User> getLinkedUsers(User user) {
     Set<User> linkedUsers = new HashSet<>();
     for (Machine machine : user.getMachines()) {
@@ -26,6 +26,7 @@ public class UserDAO {
     }
     return new ArrayList<>(linkedUsers);
   }
+
   public User getUserByUsername(String username) {
     Query usernameQuery = entityManager.createQuery("select u from User u where lower(u.username) = :username");
     usernameQuery.setParameter("username", username.toLowerCase());
@@ -52,20 +53,8 @@ public class UserDAO {
     }
   }
 
-  public List<NewUser> getNewUsers() {
-    Query newUsers = entityManager.createQuery("select u from NewUser u");
-    List users = newUsers.getResultList();
-    if (users == null) {
-      return null;
-    } else {
-      List<NewUser> realUsers = new ArrayList<>();
-      for (Object object : users) {
-        realUsers.add((NewUser) object);
-      }
-      return realUsers;
-    }
+  @Override
+  public Class<User> getClazz() {
+    return User.class;
   }
-
-  @PersistenceContext
-  private EntityManager entityManager;
 }

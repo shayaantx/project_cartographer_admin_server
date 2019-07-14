@@ -4,9 +4,6 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
-/**
- * Created by shayaantx on 3/3/2018.
- */
 @Entity(name = "comp")
 public class Machine {
   @Id

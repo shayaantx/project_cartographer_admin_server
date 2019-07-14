@@ -6,9 +6,6 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
-/**
- * Created by shayaantx on 1/21/2018.
- */
 @Entity
 public class User {
   @Id

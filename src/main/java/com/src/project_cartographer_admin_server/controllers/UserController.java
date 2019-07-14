@@ -8,10 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-
-/**
- * Created by shayaantx on 1/21/2018.
- */
 @Controller
 public class UserController {
 
@@ -31,11 +27,6 @@ public class UserController {
                                @RequestParam(value = "username", required = false) String username,
                                @RequestParam(value = "email", required = false) String email) {
     return userBO.loadUser(userIdParam, username, email);
-  }
-
-  @RequestMapping(value = "/newUsers")
-  public ModelAndView getNewUsers() {
-    return userBO.getNewUsers();
   }
 
   @RequestMapping(value = "/banUser")
@@ -71,12 +62,6 @@ public class UserController {
                                  @RequestParam(value = "comments", required = false) String comments) {
     return userBO.updateUser(userIdParam, username, email, userType, comments);
   }
-
-  @RequestMapping(value = "/activateUser")
-  public ModelAndView activateUser(@RequestParam(value = "validationToken") String validationToken) {
-    return userBO.activateUser(validationToken);
-  }
-
 
   @Autowired
   private UserBO userBO;

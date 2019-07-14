@@ -17,6 +17,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
@@ -59,33 +61,13 @@ public class UserBO {
       .addObject("accountTypeFilters", accountTypeFilterValues);
   }
 
-  public ModelAndView getNewUsers() {
-    List<DisplayColumn> headerRow = new ArrayList<>();
-    headerRow.add(new DisplayColumn("username"));
-    headerRow.add(new DisplayColumn("activationToken"));
-    headerRow.add(new DisplayColumn("actions"));
-
-    List<DisplayRow> users = new ArrayList<>();
-    Iterable<NewUser> newUsers = userDAO.getNewUsers();
-    for (NewUser newUser : newUsers) {
-      List<String> values = new ArrayList<>();
-      values.add(newUser.getUsername());
-      values.add(newUser.getValidationToken());
-      values.add("activateAction");
-      users.add(new DisplayRow(values));
-    }
-    return new ModelAndView("newUsers")
-      .addObject("headerRow", headerRow)
-      .addObject("newUsers", users);
-  }
-
   public ModelAndView loadUser(Integer idParam, String username, String email) {
     ModelAndView modelAndView = new ModelAndView("user");
     boolean hasUser = false;
     try {
       User user = null;
       if (idParam != null) {
-        user = entityManager.getReference(User.class, idParam);
+        user = userDAO.loadEntity(idParam);
       }
       if (username != null && !username.isEmpty()) {
         user = userDAO.getUserByUsername(username);
@@ -286,37 +268,11 @@ public class UserBO {
     return (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
   }
 
-  @Transactional
-  public ModelAndView activateUser(String validationToken) {
-    try {
-      URL url = new URL("https://cartographer.online/activate1?key=" + validationToken);
-      HttpURLConnection con = (HttpURLConnection) url.openConnection();
-      con.setRequestMethod("GET");
-
-      try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
-        String inputLine;
-        boolean success = false;
-        while ((inputLine = in.readLine()) != null) {
-          if (inputLine.contains("Account Successfully Activated")) {
-            LOGGER.info("Succesfully activated validation token " + validationToken);
-            success = true;
-          }
-        }
-        if (!success) {
-          LOGGER.error("Could not activate token " + validationToken);
-        }
-      }
-    } catch (Exception e) {
-      LOGGER.error("Error sending activate request");
-    }
-    return getNewUsers();
-  }
-
   @Component
   public class TransactionHelper {
     @Transactional(value = Transactional.TxType.REQUIRES_NEW)
     public void banAllMachines(Integer userIdParam) {
-      User user = entityManager.getReference(User.class, userIdParam);
+      User user = userDAO.loadEntity(userIdParam);
       Set<Machine> machineSet = user.getMachines();
       for (Machine machine : machineSet) {
         machine.setBanned(true);
@@ -326,7 +282,7 @@ public class UserBO {
 
     @Transactional(value = Transactional.TxType.REQUIRES_NEW)
     public void banMachine(Integer userId, Integer machineId) {
-      User user = entityManager.getReference(User.class, userId);
+      User user = userDAO.loadEntity(userId);
       Set<Machine> machineSet = user.getMachines();
       for (Machine machine : machineSet) {
         if (machine.getComp_id().equals(machineId)) {
@@ -340,7 +296,7 @@ public class UserBO {
 
     @Transactional(value = Transactional.TxType.REQUIRES_NEW)
     public void unbanMachine(Integer userId, Integer machineId) {
-      User user = entityManager.getReference(User.class, userId);
+      User user = userDAO.loadEntity(userId);
       Set<Machine> machineSet = user.getMachines();
       for (Machine machine : machineSet) {
         if (machine.getComp_id().equals(machineId)) {
@@ -354,7 +310,7 @@ public class UserBO {
 
     @Transactional(value = Transactional.TxType.REQUIRES_NEW)
     public void unbanUser(Integer userIdParam, String comments) {
-      User user = entityManager.getReference(User.class, userIdParam);
+      User user = userDAO.loadEntity(userIdParam);
       user.setUserAccountType(UserAccountType.NORMAL_PUBLIC);
       if (Strings.isNotBlank(comments)) {
         user.setComments(comments);
@@ -364,7 +320,7 @@ public class UserBO {
 
     @Transactional(value = Transactional.TxType.REQUIRES_NEW)
     public void banUser(Integer userIdParam, String comments) {
-      User user = entityManager.getReference(User.class, userIdParam);
+      User user = userDAO.loadEntity(userIdParam);
       user.setUserAccountType(UserAccountType.NORMAL_CHEATER);
       if (Strings.isNotBlank(comments)) {
         user.setComments(comments);
@@ -374,7 +330,7 @@ public class UserBO {
 
     @Transactional(value = Transactional.TxType.REQUIRES_NEW)
     public void updateUser(Integer userIdParam, String username, String email, String userType, String comments) {
-      User user = entityManager.getReference(User.class, userIdParam);
+      User user = userDAO.loadEntity(userIdParam);
       if (!user.getUsername().equalsIgnoreCase(username)) {
         user.setUsername(username);
         LOGGER_AUDIT.info("User " + getUser().getUsername() + " changed " + user.getUsername() + " username");
@@ -396,8 +352,8 @@ public class UserBO {
       }
     }
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Autowired
+    private UserDAO userDAO;
   }
 
   private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -409,7 +365,4 @@ public class UserBO {
 
   @Autowired
   private UserDAO userDAO;
-
-  @PersistenceContext
-  private EntityManager entityManager;
 }

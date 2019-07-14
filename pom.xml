@@ -78,7 +78,12 @@
             <artifactId>h2</artifactId>
             <scope>test</scope>
         </dependency>
-	</dependencies>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4</version>
+        </dependency>
+    </dependencies>
 
 	<build>
         <finalName>project_cartographer_admin</finalName>

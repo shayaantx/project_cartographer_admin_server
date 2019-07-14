@@ -35,44 +35,33 @@ function activateUser(validationToken) {
 }
 
 function searchForUser() {
-    var filterText = $('#filterText').val();
-    var csrfToken = $('#_csrf').attr("content");
-    var csrfHeader = $('#_csrf_header').attr("content");
-    $.ajax({
-        url: window.location.protocol + "searchForUser",
-        dataType: "json",
-        type: 'POST',
-        contentType: 'application/json; charset=utf-8',
-        beforeSend: function(xhr){
-                xhr.setRequestHeader(csrfHeader, csrfToken);
-        },
-        data: JSON.stringify({
-            filterText: filterText
-        }),
-        error: function (request, status, error) {
-            alert(request.responseText);
-        },
-        success: function(result){
-            var users = result["users"];
-            //clear all rows except header
-            $("#userTable tr:gt(0)").remove();
-
-            if (users) {
-                var html = '';
-                for (var i = 0; i < users.length; i++) {
-                    var user = users[i];
-
-                    html += '<tr>';
-                    var values = user["values"];
-                    for (var k = 0; k < values.length; k++) {
-                        html += '<td>' + values[k] + '</td>';
-                    }
-                    html += '</tr>';
-                }
-            }
-            $('#userTable tr').first().after(html);
-        }
+    const postData = JSON.stringify({
+      filterText: $('#filterText').val()
     });
+    post(
+      "searchForUser",
+      postData,
+      function(result) {
+        var users = result["users"];
+        //clear all rows except header
+        $("#userTable tr:gt(0)").remove();
+
+        if (users) {
+          var html = '';
+          for (var i = 0; i < users.length; i++) {
+            var user = users[i];
+
+            html += '<tr>';
+            var values = user["values"];
+            for (var k = 0; k < values.length; k++) {
+                html += '<td>' + values[k] + '</td>';
+            }
+            html += '</tr>';
+          }
+        }
+        $('#userTable tr').first().after(html);
+      }
+    );
 }
 
 function initCommonJs() {
@@ -149,11 +138,6 @@ function initCommonJs() {
 
         $("#searchForUser").click(function() {
             searchForUser();
-        });
-
-        $(".activate").click(function() {
-            var validationToken = $(this).parent().parent().find('td:nth-child(2)').children().html()
-            activateUser(validationToken);
         });
     });
 }

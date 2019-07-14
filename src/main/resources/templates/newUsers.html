@@ -1,13 +1,10 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <title>Project Cartographer Admin</title>
-    <link th:href="@{/css/common.css}" rel="stylesheet" />
-    <script type="text/javascript" th:src="@{/js/jquery-3.3.1.js}" />
-    <script type="text/javascript" th:src="@{/js/common.js}" />
-    <script type="text/javascript" th:src="@{/js/filter.js}" />
+    <div th:replace="fragments/header :: header"></div>
+    <script type="text/javascript" th:src="@{/js/newUsers.js}" />
     <script type="text/javascript">
-        initCommonJs();
+        initNewUsers();
     </script>
 </head>
 <body>
@@ -19,6 +16,7 @@
 
         <p>Activate new user accounts</p>
         <p>If you still see the new user account after clicking activate try refreshing, the delete happens during activation, but there could be some minor delay</p>
+        <p>NOTE* Valid email only validates the format of the email, we don't validate if the actual email will work. If you resend the activation it either succeeds or fails with an appropriate message</p>
         <hr />
         <table id="newUserTable" class="order-table table">
             <thead>
@@ -31,13 +29,22 @@
             <tr th:each="user : ${newUsers}">
                 <th:block th:each="value : ${user.values}">
                     <div class="newUsers" th:switch="${value}">
-                        <td th:case="activateAction"><button class="activate" type="button">Activate</button></td>
+                        <td th:case="actions">
+                            <button class="newUserBtn activate" type="button">Activate</button>
+                            <button class="newUserBtn editEmail" type="button">Edit</button>
+                            <button class="newUserBtn resend" type="button">Resend</button>
+                        </td>
                         <td th:case="*"><p th:text="${value}"></p></td>
                     </div>
                 </th:block>
             </tr>
         </table>
     </div>
+</div>
+
+<div id="editEmailDialog" title="Edit email">
+    <label for="newUserEmail">Email</label>
+    <input type="text" name="email" id="newUserEmail" value="" class="text ui-widget-content ui-corner-all" />
 </div>
 
 </body>

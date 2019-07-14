@@ -4,9 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-/**
- * Created by shayaantx on 7/1/2018.
- */
 @Entity
 public class NewUser {
   public String getUsername() {
@@ -25,6 +22,14 @@ public class NewUser {
     this.validationToken = validationToken;
   }
 
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
 
   @Id
   @Column(name = "username")
@@ -32,4 +37,7 @@ public class NewUser {
 
   @Column(name = "validation_token")
   private String validationToken;
+
+  @Column(name = "email")
+  private String email;
 }

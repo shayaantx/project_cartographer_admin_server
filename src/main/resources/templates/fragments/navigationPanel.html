@@ -7,4 +7,5 @@
         <li><a th:classappend="${selected} == 'emails' ? 'active' : ''" href="/emails">Emails</a></li>
         <li><a href="/logout">Logout</a></li>
     </ul>
+    <div th:replace="fragments/csrf"></div>
 </div>
