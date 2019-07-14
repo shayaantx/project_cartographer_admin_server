@@ -3,7 +3,7 @@
 <br>
 Someone has used your email address to create a new account. If you did not authorise this you can safely ignore this email as the following activation link dies after two (2) days. Otherwise, to activate your new account click on the following link.<br>
 <b>Username:</b> $user_username<br>
-<b>Activation Link:</b> <a href="https://cartographer.online/activate1?key=%s">https://cartographer.online/activate1?key=%s</a><br>
+<b>Activation Link:</b> <a href="%s">%s</a><br>
 <br>
 <b>Terms of Service:</b><br>
 <a href="https://cartographer.online/terms">https://cartographer.online/terms</a><br>
