@@ -100,8 +100,19 @@ public class NewUserBO {
     Resource resource = new ClassPathResource("activationEmailTemplate.txt");
 
     try {
-      File file = resource.getFile();
-      return new String(Files.readAllBytes(file.toPath()));
+      try (InputStream inputStreamSource = resource.getInputStream()) {
+        final int bufferSize = 1024;
+        final char[] buffer = new char[bufferSize];
+        final StringBuilder out = new StringBuilder();
+        Reader in = new InputStreamReader(inputStreamSource, "UTF-8");
+        for (; ; ) {
+          int rsz = in.read(buffer, 0, buffer.length);
+          if (rsz < 0)
+            break;
+          out.append(buffer, 0, rsz);
+        }
+        return out.toString();
+      }
     } catch (Exception e) {
       throw new RuntimeException("Error getting the activation email template", e);
     }
