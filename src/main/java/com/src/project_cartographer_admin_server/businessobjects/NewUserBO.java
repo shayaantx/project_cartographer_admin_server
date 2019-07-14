@@ -94,7 +94,7 @@ public class NewUserBO {
     String activationTemplate = getActivationEmailTemplate();
     String subject = "Halo 2 Account Activation: " + username;
     String activationUrl = "https://cartographer.online/activate1?key=" + activationToken;
-    EmailHelper.sendEmail(email, subject, String.format(activationTemplate, activationUrl));
+    EmailHelper.sendEmail(email, subject, String.format(activationTemplate, activationUrl, activationUrl));
   }
 
   private static String getActivationEmailTemplate() {
