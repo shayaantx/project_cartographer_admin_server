@@ -2,6 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <div th:replace="fragments/header :: header"></div>
+    <script type="text/javascript" th:src="@{/js/commonUsers.js}" />
+    <script type="text/javascript" th:src="@{/js/editUser.js}" />
+    <script type="text/javascript">
+       initEditUsers();
+    </script>
 </head>
 <body>
 <div th:replace="fragments/bannerPanel"></div>

@@ -2,12 +2,9 @@ package com.src.project_cartographer_admin_server.businessobjects;
 
 import com.src.project_cartographer_admin_server.dataaccessobjects.UserDAO;
 import com.src.project_cartographer_admin_server.models.Machine;
-import com.src.project_cartographer_admin_server.models.NewUser;
 import com.src.project_cartographer_admin_server.models.User;
 import com.src.project_cartographer_admin_server.models.UserAccountType;
-import com.src.project_cartographer_admin_server.transactions.DisplayColumn;
-import com.src.project_cartographer_admin_server.transactions.DisplayRow;
-import com.src.project_cartographer_admin_server.transactions.FilterResponse;
+import com.src.project_cartographer_admin_server.transactions.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.util.Strings;
@@ -17,19 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -76,7 +61,7 @@ public class UserBO {
         }
       }
       if (user != null) {
-        fillUserTransaction(modelAndView, user);
+        fillModelViewWithUserData(modelAndView, user);
         hasUser = true;
       }
     } catch (Exception e) {
@@ -87,7 +72,7 @@ public class UserBO {
     return modelAndView;
   }
 
-  private void fillUserTransaction(ModelAndView modelAndView, User user) {
+  private void fillModelViewWithUserData(ModelAndView modelAndView, User user) {
     modelAndView.addObject("id", user.getUserId());
     modelAndView.addObject("username", user.getUsername());
     modelAndView.addObject("email", user.getEmail());
@@ -150,26 +135,14 @@ public class UserBO {
     return accountTypeFilterValues;
   }
 
-  @Transactional
-  public ModelAndView banUser(Integer userIdParam, String comments) {
-    try {
-      transactionHelper.banUser(userIdParam, comments);
-      return getSuccesfulUser(userIdParam, "banned user");
-    } catch (Exception e) {
-      LOGGER.error("Error banning user", e);
-    }
-    return getErrorUser(userIdParam, "failed to ban user");
+  public UserResponse banUser(BanUserRequest request) {
+    transactionHelper.banUser(request.getId(), request.getComments());
+    return toTransaction(request.getId());
   }
 
-  @Transactional
-  public ModelAndView unbanUser(Integer userIdParam, String comments) {
-    try {
-      transactionHelper.unbanUser(userIdParam, comments);
-      return getSuccesfulUser(userIdParam, "unbanned user");
-    } catch (Exception e) {
-      LOGGER.error("Error unbanning user", e);
-    }
-    return getErrorUser(userIdParam, "failed to unban user");
+  public UserResponse unbanUser(UnbanUserRequest request) {
+    transactionHelper.unbanUser(request.getId(), request.getComments());
+    return toTransaction(request.getId());
   }
 
   private static Date getDttmFromEpocTime(String epocTimeStr) {
@@ -206,14 +179,9 @@ public class UserBO {
     return users;
   }
 
-  public ModelAndView updateUser(Integer userIdParam, String username, String email, String userType, String comments) {
-    try {
-      transactionHelper.updateUser(userIdParam, username, email, userType, comments);
-      return getSuccesfulUser(userIdParam, "updated user");
-    } catch (Exception e) {
-      LOGGER.error("Error updating user", e);
-    }
-    return getErrorUser(userIdParam, "failed to update user");
+  public UserResponse updateUser(Integer userIdParam, String username, String email, String userType, String comments) {
+    transactionHelper.updateUser(userIdParam, username, email, userType, comments);
+    return toTransaction(userIdParam);
   }
 
   public ModelAndView banMachine(Integer userIdParam, Integer machineId) {
@@ -268,6 +236,17 @@ public class UserBO {
     return (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
   }
 
+  private UserResponse toTransaction(int id) {
+    User user = userDAO.loadEntity(id);
+    return new UserResponse(
+      user.getUserId(),
+      user.getUsername(),
+      user.getEmail(),
+      user.getUserAccountType().name(),
+      user.getComments(),
+      user.getUserAccountType().equals(UserAccountType.NORMAL_CHEATER));
+  }
+
   @Component
   public class TransactionHelper {
     @Transactional(value = Transactional.TxType.REQUIRES_NEW)
@@ -312,9 +291,7 @@ public class UserBO {
     public void unbanUser(Integer userIdParam, String comments) {
       User user = userDAO.loadEntity(userIdParam);
       user.setUserAccountType(UserAccountType.NORMAL_PUBLIC);
-      if (Strings.isNotBlank(comments)) {
-        user.setComments(comments);
-      }
+      updateComments(comments, user);
       LOGGER_AUDIT.info("User " + getUser().getUsername() + " unbanned user " + user.getUsername());
     }
 
@@ -322,9 +299,7 @@ public class UserBO {
     public void banUser(Integer userIdParam, String comments) {
       User user = userDAO.loadEntity(userIdParam);
       user.setUserAccountType(UserAccountType.NORMAL_CHEATER);
-      if (Strings.isNotBlank(comments)) {
-        user.setComments(comments);
-      }
+      updateComments(comments, user);
       LOGGER_AUDIT.info("User " + getUser().getUsername() + " banned user " + user.getUsername());
     }
 
@@ -333,22 +308,28 @@ public class UserBO {
       User user = userDAO.loadEntity(userIdParam);
       if (!user.getUsername().equalsIgnoreCase(username)) {
         user.setUsername(username);
-        LOGGER_AUDIT.info("User " + getUser().getUsername() + " changed " + user.getUsername() + " username");
+        LOGGER_AUDIT.info("Username " + getUser().getUsername() + " changed to " + user.getUsername());
       }
       if (!email.equalsIgnoreCase(user.getEmail())) {
         user.setEmail(email);
-        LOGGER_AUDIT.info("User " + getUser().getUsername() + " changed " + user.getUsername() + " email");
+        LOGGER_AUDIT.info("User email " + user.getEmail() + " changed to " + email + " email");
       }
       if (userType != null && !userType.isEmpty()) {
         UserAccountType userAccountType = UserAccountType.valueOf(userType);
         if (!userAccountType.equals(user.getUserAccountType())) {
           user.setUserAccountType(userAccountType);
-          LOGGER_AUDIT.info("User " + getUser().getUsername() + " changed " + user.getUsername() + " account type");
+          LOGGER_AUDIT.info("User " + user.getUserAccountType() + " type changed to " + userAccountType);
         }
       }
-      if (comments != null && !comments.isEmpty() && !comments.equalsIgnoreCase(user.getComments())) {
+
+      updateComments(comments, user);
+    }
+
+    private void updateComments(String comments, User user) {
+      if (Strings.isNotBlank(comments) && !comments.equalsIgnoreCase(user.getComments())) {
+        //only change comments if they are not blank and not the same as original comments
         user.setComments(comments);
-        LOGGER_AUDIT.info("User " + getUser().getUsername() + " changed " + user.getUsername() + " comments");
+        LOGGER_AUDIT.info("User comments to changed " + comments);
       }
     }
 

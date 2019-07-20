@@ -21,7 +21,7 @@ function resendActivationEmail(username) {
     "resendNewUserEmail",
     postData,
     function(result) {
-      alert("Successfully sent");
+      showSuccessToast('Activation sent!');
     }
   );
 }
@@ -43,8 +43,14 @@ function editNewUserEmail() {
       //reset the current new user row that is selected
       currentNewUserRowToEdit = null;
       dialog.dialog("close");
+
+      showSuccessToast('Successfully edited email');
     }
   );
+}
+
+function activateUser(validationToken) {
+    window.location.replace(window.location.protocol + "activateUser?validationToken=" + encodeURIComponent(validationToken));
 }
 
 function initNewUsers() {
