@@ -1,14 +1,14 @@
 package com.src.project_cartographer_admin_server.dataaccessobjects;
 
 import com.src.project_cartographer_admin_server.models.Machine;
-import com.src.project_cartographer_admin_server.models.NewUser;
 import com.src.project_cartographer_admin_server.models.User;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by shayaantx on 3/24/2018.

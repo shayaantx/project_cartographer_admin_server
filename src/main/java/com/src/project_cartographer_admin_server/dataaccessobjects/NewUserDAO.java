@@ -3,8 +3,6 @@ package com.src.project_cartographer_admin_server.dataaccessobjects;
 import com.src.project_cartographer_admin_server.models.NewUser;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;

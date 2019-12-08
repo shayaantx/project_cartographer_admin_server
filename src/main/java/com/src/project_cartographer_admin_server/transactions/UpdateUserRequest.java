@@ -27,5 +27,6 @@ public class UpdateUserRequest {
     return comments;
   }
 
-  public UpdateUserRequest() {}
+  public UpdateUserRequest() {
+  }
 }

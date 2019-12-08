@@ -12,5 +12,6 @@ public class BanUserRequest {
     return comments;
   }
 
-  public BanUserRequest() {}
+  public BanUserRequest() {
+  }
 }

@@ -7,5 +7,6 @@ public class ResendNewUserEmailRequest {
     return username;
   }
 
-  public ResendNewUserEmailRequest() {}
+  public ResendNewUserEmailRequest() {
+  }
 }

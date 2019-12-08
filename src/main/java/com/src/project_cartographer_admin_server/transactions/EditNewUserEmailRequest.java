@@ -4,5 +4,6 @@ public class EditNewUserEmailRequest {
   public String username;
   public String email;
 
-  public EditNewUserEmailRequest() {}
+  public EditNewUserEmailRequest() {
+  }
 }

@@ -12,5 +12,6 @@ public class UnbanUserRequest {
     return comments;
   }
 
-  public UnbanUserRequest() {}
+  public UnbanUserRequest() {
+  }
 }

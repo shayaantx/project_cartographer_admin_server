@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+  <div th:replace="fragments/header :: header"></div>
+  <script type="text/javascript" th:src="@{/js/profile.js}" />
+  <script type="text/javascript">
+      initProfiles();
+  </script>
+</head>
+<body>
+<div th:replace="fragments/bannerPanel"></div>
+
+<div class="content">
+  <div th:replace="fragments/navigationPanel :: navPanel(selected='profile')"></div>
+  <div class="pageContent">
+
+    <p th:text="${username} + '\'s Profile'"></p>
+    <div class="changePassword" th:if="${showChangePassword}">
+      <hr />
+
+      <div class="changePasswordFields">
+        <div class="changePasswordInputFieldLabel">
+          <label for="newPassword">New Password</label>
+          <input type="password" id="newPassword" name="newPassword" />
+          <button id="changePassword" type="button">Change</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
