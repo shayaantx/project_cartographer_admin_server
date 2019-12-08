@@ -28,5 +28,5 @@ src/main/java/META-INF/MANIFEST.MF
 logs/server.log
 src/main/java/META-INF/MANIFEST.MF
 logs/audit.log
-*.properties
+/*.properties
 pom.xml
