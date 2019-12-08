@@ -29,6 +29,39 @@ import static com.src.project_cartographer_admin_server.utils.EmailHelper.isVali
 
 @Component
 public class NewUserBO {
+  private static final Logger LOGGER = LogManager.getLogger();
+  @Autowired
+  private NewUserDAO newUserDAO;
+
+  private static void sendActivationEmailTemplate(String activationToken, String username, String email) {
+    String activationTemplate = getActivationEmailTemplate();
+    String subject = "Halo 2 Account Activation: " + username;
+    String activationUrl = "https://cartographer.online/activate1?key=" + activationToken;
+    EmailHelper.sendEmail(email, subject, String.format(activationTemplate, activationUrl, activationUrl));
+  }
+
+  private static String getActivationEmailTemplate() {
+    Resource resource = new ClassPathResource("activationEmailTemplate.txt");
+
+    try {
+      try (InputStream inputStreamSource = resource.getInputStream()) {
+        final int bufferSize = 1024;
+        final char[] buffer = new char[bufferSize];
+        final StringBuilder out = new StringBuilder();
+        Reader in = new InputStreamReader(inputStreamSource, "UTF-8");
+        for (; ; ) {
+          int rsz = in.read(buffer, 0, buffer.length);
+          if (rsz < 0)
+            break;
+          out.append(buffer, 0, rsz);
+        }
+        return out.toString();
+      }
+    } catch (Exception e) {
+      throw new RuntimeException("Error getting the activation email template", e);
+    }
+  }
+
   public ModelAndView getNewUsers() {
     List<DisplayColumn> headerRow = new ArrayList<>();
     headerRow.add(new DisplayColumn("username"));
@@ -91,38 +124,4 @@ public class NewUserBO {
     sendActivationEmailTemplate(newUser.getValidationToken(), newUser.getUsername(), newUser.getEmail());
     return true;
   }
-
-  private static void sendActivationEmailTemplate(String activationToken, String username, String email) {
-    String activationTemplate = getActivationEmailTemplate();
-    String subject = "Halo 2 Account Activation: " + username;
-    String activationUrl = "https://cartographer.online/activate1?key=" + activationToken;
-    EmailHelper.sendEmail(email, subject, String.format(activationTemplate, activationUrl, activationUrl));
-  }
-
-  private static String getActivationEmailTemplate() {
-    Resource resource = new ClassPathResource("activationEmailTemplate.txt");
-
-    try {
-      try (InputStream inputStreamSource = resource.getInputStream()) {
-        final int bufferSize = 1024;
-        final char[] buffer = new char[bufferSize];
-        final StringBuilder out = new StringBuilder();
-        Reader in = new InputStreamReader(inputStreamSource, "UTF-8");
-        for (; ; ) {
-          int rsz = in.read(buffer, 0, buffer.length);
-          if (rsz < 0)
-            break;
-          out.append(buffer, 0, rsz);
-        }
-        return out.toString();
-      }
-    } catch (Exception e) {
-      throw new RuntimeException("Error getting the activation email template", e);
-    }
-  }
-
-  @Autowired
-  private NewUserDAO newUserDAO;
-
-  private static final Logger LOGGER = LogManager.getLogger();
 }

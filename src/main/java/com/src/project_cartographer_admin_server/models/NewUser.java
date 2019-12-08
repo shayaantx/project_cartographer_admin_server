@@ -6,6 +6,14 @@ import javax.persistence.Id;
 
 @Entity
 public class NewUser {
+  @Id
+  @Column(name = "username")
+  private String username;
+  @Column(name = "validation_token")
+  private String validationToken;
+  @Column(name = "email")
+  private String email;
+
   public String getUsername() {
     return username;
   }
@@ -29,15 +37,4 @@ public class NewUser {
   public void setEmail(String email) {
     this.email = email;
   }
-
-
-  @Id
-  @Column(name = "username")
-  private String username;
-
-  @Column(name = "validation_token")
-  private String validationToken;
-
-  @Column(name = "email")
-  private String email;
 }

@@ -10,6 +10,9 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class UserController {
 
+  @Autowired
+  private UserBO userBO;
+
   @RequestMapping(value = "/users")
   public ModelAndView mainPage() {
     return userBO.getScreenConfig();
@@ -45,22 +48,4 @@ public class UserController {
   public UserResponse unbanUser(@RequestBody UnbanUserRequest request) {
     return userBO.unbanUser(request);
   }
-
-  @RequestMapping(value = "/banMachine")
-  public ModelAndView banMachine(@RequestParam(value = "userId") Integer userIdParam, @RequestParam(value = "machineId") Integer machineId) {
-    return userBO.banMachine(userIdParam, machineId);
-  }
-
-  @RequestMapping(value = "/banAllMachines")
-  public ModelAndView banAllMachines(@RequestParam(value = "userId") Integer userIdParam) {
-    return userBO.banAllMachines(userIdParam);
-  }
-
-  @RequestMapping(value = "/unbanMachine")
-  public ModelAndView unbanMachine(@RequestParam(value = "userId") Integer userIdParam, @RequestParam(value = "machineId") Integer machineId) {
-    return userBO.unbanMachine(userIdParam, machineId);
-  }
-
-  @Autowired
-  private UserBO userBO;
 }

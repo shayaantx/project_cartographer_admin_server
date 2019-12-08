@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
@@ -17,6 +16,9 @@ import java.util.Properties;
 @EnableWebSecurity
 @Profile("simple-security")
 public class SimpleSecurity extends CommonSecurity {
+  @Value("#{'${users}'.split(';')}")
+  private List<String> users;
+
   @Autowired
   public void configureAuthentication(AuthenticationManagerBuilder auth) throws Exception {
     auth.userDetailsService(inMemoryUserDetailsManager());
@@ -32,7 +34,4 @@ public class SimpleSecurity extends CommonSecurity {
     }
     return new InMemoryUserDetailsManager(inMemoryUsers);
   }
-
-  @Value("#{'${users}'.split(';')}")
-  private List<String> users;
 }

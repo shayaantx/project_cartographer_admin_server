@@ -7,6 +7,9 @@ public class UpdateUserRequest {
   String userType;
   String comments;
 
+  public UpdateUserRequest() {
+  }
+
   public int getId() {
     return id;
   }
@@ -25,8 +28,5 @@ public class UpdateUserRequest {
 
   public String getComments() {
     return comments;
-  }
-
-  public UpdateUserRequest() {
   }
 }

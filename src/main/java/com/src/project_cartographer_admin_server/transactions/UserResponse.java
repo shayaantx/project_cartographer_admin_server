@@ -8,6 +8,15 @@ public class UserResponse {
   private final String comments;
   private final boolean banned;
 
+  public UserResponse(int id, String username, String email, String userType, String comments, boolean banned) {
+    this.id = id;
+    this.username = username;
+    this.email = email;
+    this.userType = userType;
+    this.comments = comments;
+    this.banned = banned;
+  }
+
   public int getId() {
     return id;
   }
@@ -30,14 +39,5 @@ public class UserResponse {
 
   public boolean getBanned() {
     return banned;
-  }
-
-  public UserResponse(int id, String username, String email, String userType, String comments, boolean banned) {
-    this.id = id;
-    this.username = username;
-    this.email = email;
-    this.userType = userType;
-    this.comments = comments;
-    this.banned = banned;
   }
 }

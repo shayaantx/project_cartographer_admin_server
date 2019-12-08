@@ -20,7 +20,7 @@ function resendActivationEmail(username) {
   post(
     "resendNewUserEmail",
     postData,
-    function(result) {
+    function (result) {
       showSuccessToast('Activation sent!');
     }
   );
@@ -35,7 +35,7 @@ function editNewUserEmail() {
   post(
     "editNewUserEmail",
     postData,
-    function(result) {
+    function (result) {
       //reset the new user email dialog input
       $(NEW_USER_EMAIL_DIALOG_INPUT_NAME).val("");
       //change the underlying tables email value
@@ -50,7 +50,7 @@ function editNewUserEmail() {
 }
 
 function activateUser(validationToken) {
-    window.location.replace(window.location.protocol + "activateUser?validationToken=" + encodeURIComponent(validationToken));
+  window.location.replace(window.location.protocol + "activateUser?validationToken=" + encodeURIComponent(validationToken));
 }
 
 function initNewUsers() {
@@ -65,19 +65,19 @@ function initNewUsers() {
       }
     });
 
-    $(".activate").click(function() {
-        var validationToken = $(this).parent().parent().find(VALIDATION_TOKEN_FIELD_LOCATION).children().html();
-        activateUser(validationToken);
+    $(".activate").click(function () {
+      var validationToken = $(this).parent().parent().find(VALIDATION_TOKEN_FIELD_LOCATION).children().html();
+      activateUser(validationToken);
     });
 
-    $(".editEmail").click(function() {
-        let email = $(this).parent().parent().find(EMAIL_FIELD_LOCATION).children().html();
-        $(NEW_USER_EMAIL_DIALOG_INPUT_NAME).val(email);
-        currentNewUserRowToEdit = $(this).parent().parent();
-        dialog.dialog("open");
+    $(".editEmail").click(function () {
+      let email = $(this).parent().parent().find(EMAIL_FIELD_LOCATION).children().html();
+      $(NEW_USER_EMAIL_DIALOG_INPUT_NAME).val(email);
+      currentNewUserRowToEdit = $(this).parent().parent();
+      dialog.dialog("open");
     });
 
-    $(".resend").click(function() {
+    $(".resend").click(function () {
       let username = $(this).parent().parent().find(USERNAME_FIELD_LOCATION).children().html();
       resendActivationEmail(username);
     });

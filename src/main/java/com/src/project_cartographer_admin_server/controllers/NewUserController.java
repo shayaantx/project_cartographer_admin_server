@@ -10,6 +10,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class NewUserController {
+  @Autowired
+  private NewUserBO newUserBO;
+
   @RequestMapping(value = "resendNewUserEmail", method = RequestMethod.POST)
   @ResponseBody
   public boolean resendActivationEmail(@RequestBody ResendNewUserEmailRequest request) {
@@ -31,7 +34,4 @@ public class NewUserController {
   public ModelAndView activateUser(@RequestParam(value = "validationToken") String validationToken) {
     return newUserBO.activateUser(validationToken);
   }
-
-  @Autowired
-  private NewUserBO newUserBO;
 }

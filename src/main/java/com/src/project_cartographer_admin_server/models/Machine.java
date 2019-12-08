@@ -140,6 +140,11 @@ public class Machine {
   }
 
   @Override
+  public int hashCode() {
+    return comp_id != null ? comp_id.hashCode() : 0;
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
@@ -147,10 +152,5 @@ public class Machine {
     Machine machine = (Machine) o;
 
     return comp_id != null ? comp_id.equals(machine.comp_id) : machine.comp_id == null;
-  }
-
-  @Override
-  public int hashCode() {
-    return comp_id != null ? comp_id.hashCode() : 0;
   }
 }

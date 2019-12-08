@@ -1,5 +1,5 @@
 .banner {
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
   line-height: 1.42857143;
   background-color: #333;
@@ -19,6 +19,7 @@ a {
   text-decoration: none;
   color: #9d9d9d;
 }
+
 img {
   vertical-align: middle;
   border: 0;
@@ -61,12 +62,12 @@ body {
 }
 
 .verticalnavbar {
-  float:left;
-  overflow:hidden;
+  float: left;
+  overflow: hidden;
 }
 
 .pageContent {
-  float:left;
+  float: left;
 }
 
 .headerRow {
@@ -107,8 +108,8 @@ hr {
 }
 
 .editUserInputLabel {
-  display:inline;
-  float:left;
+  display: inline;
+  float: left;
   width: 25%;
   margin-top: 6px;
 }
@@ -136,14 +137,15 @@ hr {
 .error {
   color: #D8000C;
   background-color: #FFD2D2;
-  font-size:1em;
+  font-size: 1em;
 }
 
 .success {
   color: #D8000C;
   background-color: #7CFC00;
-  font-size:1em;
+  font-size: 1em;
 }
+
 input[readonly] {
   background-color: #D3D3D3;
 }

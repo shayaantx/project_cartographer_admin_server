@@ -26,6 +26,36 @@ import java.util.Set;
  */
 @Component
 public class UserBO {
+  private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+  private static final Logger LOGGER = LogManager.getLogger();
+  private static final Logger LOGGER_AUDIT = LogManager.getLogger("Audit");
+  @Autowired
+  private TransactionHelper transactionHelper;
+  @Autowired
+  private UserDAO userDAO;
+
+  private static List<String> getAccountTypeFilterValues() {
+    List<String> accountTypeFilterValues = new ArrayList<>();
+    accountTypeFilterValues.add("Select account type");
+    for (UserAccountType userAccountType : UserAccountType.values()) {
+      if (userAccountType == UserAccountType.DUMMY) {
+        continue;
+      }
+      accountTypeFilterValues.add(userAccountType.name());
+    }
+    return accountTypeFilterValues;
+  }
+
+  private static Date getDttmFromEpocTime(String epocTimeStr) {
+    if (epocTimeStr != null) {
+      long epocTime = Long.parseLong(epocTimeStr);
+      if (epocTime > 0) {
+        return new Date(epocTime * 1000);
+      }
+    }
+    return null;
+  }
+
   public ModelAndView getScreenConfig() {
     List<DisplayColumn> headerRow = new ArrayList<>();
     headerRow.add(new DisplayColumn("Id"));
@@ -126,18 +156,6 @@ public class UserBO {
     modelAndView.addObject("users", populateUsersTransaction(userDAO.getLinkedUsers(user)));
   }
 
-  private static List<String> getAccountTypeFilterValues() {
-    List<String> accountTypeFilterValues = new ArrayList<>();
-    accountTypeFilterValues.add("Select account type");
-    for (UserAccountType userAccountType : UserAccountType.values()) {
-      if (userAccountType == UserAccountType.DUMMY) {
-        continue;
-      }
-      accountTypeFilterValues.add(userAccountType.name());
-    }
-    return accountTypeFilterValues;
-  }
-
   public UserResponse banUser(BanUserRequest request) {
     transactionHelper.banUser(request.getId(), request.getComments());
     return toTransaction(request.getId());
@@ -146,16 +164,6 @@ public class UserBO {
   public UserResponse unbanUser(UnbanUserRequest request) {
     transactionHelper.unbanUser(request.getId(), request.getComments());
     return toTransaction(request.getId());
-  }
-
-  private static Date getDttmFromEpocTime(String epocTimeStr) {
-    if (epocTimeStr != null) {
-      long epocTime = Long.parseLong(epocTimeStr);
-      if (epocTime > 0) {
-        return new Date(epocTime * 1000);
-      }
-    }
-    return null;
   }
 
   @Transactional
@@ -185,36 +193,6 @@ public class UserBO {
   public UserResponse updateUser(Integer userIdParam, String username, String email, String userType, String comments) {
     transactionHelper.updateUser(userIdParam, username, email, userType, comments);
     return toTransaction(userIdParam);
-  }
-
-  public ModelAndView banMachine(Integer userIdParam, Integer machineId) {
-    try {
-      transactionHelper.banMachine(userIdParam, machineId);
-      return getSuccesfulUser(userIdParam, "banned machine");
-    } catch (Exception e) {
-      LOGGER.error("Error banning machine", e);
-    }
-    return getErrorUser(userIdParam, "failed to ban machine");
-  }
-
-  public ModelAndView unbanMachine(Integer userIdParam, Integer machineId) {
-    try {
-      transactionHelper.unbanMachine(userIdParam, machineId);
-      return getSuccesfulUser(userIdParam, "unbanned machine");
-    } catch (Exception e) {
-      LOGGER.error("Error unbanning machine", e);
-    }
-    return getErrorUser(userIdParam, "failed to unban machine");
-  }
-
-  public ModelAndView banAllMachines(Integer userIdParam) {
-    try {
-      transactionHelper.banAllMachines(userIdParam);
-      return getSuccesfulUser(userIdParam, "banned all machines");
-    } catch (Exception e) {
-      LOGGER.error("Error banning all machines", e);
-    }
-    return getErrorUser(userIdParam, "failed to ban all machines");
   }
 
   @Transactional
@@ -252,6 +230,9 @@ public class UserBO {
 
   @Component
   public class TransactionHelper {
+    @Autowired
+    private UserDAO userDAO;
+
     @Transactional(value = Transactional.TxType.REQUIRES_NEW)
     public void banAllMachines(Integer userIdParam) {
       User user = userDAO.loadEntity(userIdParam);
@@ -335,18 +316,5 @@ public class UserBO {
         LOGGER_AUDIT.info("User comments to changed " + comments);
       }
     }
-
-    @Autowired
-    private UserDAO userDAO;
   }
-
-  private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-  private static final Logger LOGGER = LogManager.getLogger();
-  private static final Logger LOGGER_AUDIT = LogManager.getLogger("Audit");
-
-  @Autowired
-  private TransactionHelper transactionHelper;
-
-  @Autowired
-  private UserDAO userDAO;
 }

@@ -11,16 +11,15 @@ import javax.transaction.Transactional;
 
 @Component
 public class AdminUserBO {
+  @Autowired
+  private PasswordEncoder passwordEncoder;
+  @Autowired
+  private AdminUserDAO adminUserDAO;
+
   @Transactional
   public boolean changePassword(String newPassword) {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     adminUserDAO.loadEntity(auth.getName()).setPassword(passwordEncoder.encode(newPassword));
     return true;
   }
-
-  @Autowired
-  private PasswordEncoder passwordEncoder;
-
-  @Autowired
-  private AdminUserDAO adminUserDAO;
 }

@@ -5,7 +5,7 @@ function searchForUser() {
   post(
     "searchForUser",
     postData,
-    function(result) {
+    function (result) {
       var users = result["users"];
       //clear all rows except header
       $("#userTable tr:gt(0)").remove();
@@ -18,7 +18,7 @@ function searchForUser() {
           html += '<tr>';
           var values = user["values"];
           for (var k = 0; k < values.length; k++) {
-              html += '<td>' + values[k] + '</td>';
+            html += '<td>' + values[k] + '</td>';
           }
           html += '</tr>';
         }
@@ -30,7 +30,7 @@ function searchForUser() {
 
 function initSearchUsers() {
   //for dynamic data
-  $(document).on("click", "#userTable tr", function(){
+  $(document).on("click", "#userTable tr", function () {
     var id = $(this).find('td:first').html();
     if (id != "Id") {
       //ignore header row
@@ -46,7 +46,7 @@ function initSearchUsers() {
       }
     });
 
-    $("#searchForUser").click(function() {
+    $("#searchForUser").click(function () {
       searchForUser();
     });
   });

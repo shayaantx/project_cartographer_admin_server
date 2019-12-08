@@ -7,6 +7,14 @@ import javax.persistence.Id;
 @Entity(name = "admin_users")
 public class AdminUser {
 
+  @Id
+  @Column(name = "username")
+  private String username;
+  @Column(name = "password")
+  private String password;
+  @Column(name = "enabled")
+  private boolean enabled;
+
   public String getUsername() {
     return username;
   }
@@ -30,14 +38,4 @@ public class AdminUser {
   public void setEnabled(boolean enabled) {
     this.enabled = enabled;
   }
-
-  @Id
-  @Column(name = "username")
-  private String username;
-
-  @Column(name = "password")
-  private String password;
-
-  @Column(name = "enabled")
-  private boolean enabled;
 }

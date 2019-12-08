@@ -11,6 +11,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 public class CommonSecurity extends WebSecurityConfigurerAdapter {
+  @Autowired
+  private Environment environment;
+
+  @Override
+  public void configure(WebSecurity web) throws Exception {
+    if (environment.acceptsProfiles("web-debug")) {
+      web.debug(true);
+    }
+  }
+
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http
@@ -29,18 +39,8 @@ public class CommonSecurity extends WebSecurityConfigurerAdapter {
       .permitAll();
   }
 
-  @Override
-  public void configure(WebSecurity web) throws Exception {
-    if (environment.acceptsProfiles("web-debug")) {
-      web.debug(true);
-    }
-  }
-
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
   }
-  
-  @Autowired
-  private Environment environment;
 }
