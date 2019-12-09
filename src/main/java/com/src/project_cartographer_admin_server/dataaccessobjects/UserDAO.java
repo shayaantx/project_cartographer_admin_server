@@ -39,9 +39,16 @@ public class UserDAO extends CommonDAO<User> {
   }
 
   public List<User> getUserByFilterText(String filterText) {
-    Query usernameQuery = entityManager.createQuery("select u from User u where lower(u.username) like :username");
-    usernameQuery.setParameter("username", "%" + filterText.toLowerCase() + "%");
-    List users = usernameQuery.getResultList();
+    final Query searchQuery;
+    if (filterText.matches("-?\\d+")) {
+      //search by id instead
+      searchQuery = entityManager.createQuery("select u from User u where u.userId = :searchText");
+      searchQuery.setParameter("searchText", Integer.valueOf(filterText));
+    } else {
+      searchQuery = entityManager.createQuery("select u from User u where lower(u.username) like :searchText or u.userId = :searchText or lower(u.email) like :searchText");
+      searchQuery.setParameter("searchText", "%" + filterText.toLowerCase() + "%");
+    }
+    List users = searchQuery.getResultList();
     if (users == null) {
       return null;
     } else {
