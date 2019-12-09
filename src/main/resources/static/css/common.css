@@ -157,3 +157,7 @@ input[readonly] {
 #newUserEmail {
   width: 260px;
 }
+
+.activateAllNewUsers a {
+  color: #0000EE;
+}

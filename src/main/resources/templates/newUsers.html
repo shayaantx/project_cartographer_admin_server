@@ -13,10 +13,14 @@
 <div class="content">
     <div th:replace="fragments/navigationPanel :: navPanel(selected='newUsers')"></div>
     <div class="pageContent">
-
-        <p>Activate new user accounts</p>
-        <p>If you still see the new user account after clicking activate try refreshing, the delete happens during activation, but there could be some minor delay</p>
-        <p>NOTE* Valid email only validates the format of the email, we don't validate if the actual email will work. If you resend the activation it either succeeds or fails with an appropriate message</p>
+        <div>
+            <p>Activate new user accounts. If you still see the new user account after clicking activate try refreshing,
+                <br/>the delete happens during activation, but there could be some minor delay
+                <br/>NOTE* Valid email only validates the format of the email, we don't validate if the actual email will work.
+                <br/>If you resend the activation it either succeeds or fails with an appropriate message
+            </p>
+        </div>
+        <div class="activateAllNewUsers"><a id="activateAllNewUsers" href="#">Activate All</a></div>
         <hr />
         <table id="newUserTable" class="order-table table">
             <thead>

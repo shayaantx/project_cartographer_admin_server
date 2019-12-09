@@ -19,6 +19,12 @@ public class NewUserController {
     return newUserBO.resendActivationEmail(request);
   }
 
+  @RequestMapping(value = "activateAllNewUsers", method = RequestMethod.POST)
+  @ResponseBody
+  public boolean activateAllNewUsers() {
+    return newUserBO.activateAll();
+  }
+
   @RequestMapping(value = "/editNewUserEmail", method = RequestMethod.POST)
   @ResponseBody
   public boolean editNewUserEmail(@RequestBody EditNewUserEmailRequest request) {

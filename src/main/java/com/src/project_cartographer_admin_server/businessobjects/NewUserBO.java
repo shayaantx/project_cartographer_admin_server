@@ -124,4 +124,16 @@ public class NewUserBO {
     sendActivationEmailTemplate(newUser.getValidationToken(), newUser.getUsername(), newUser.getEmail());
     return true;
   }
+
+  @Transactional
+  public boolean activateAll() {
+    for (NewUser newUser : newUserDAO.getUsers()) {
+      try {
+        activateUser(newUser.getValidationToken());
+      } catch (Exception e) {
+        LOGGER.error("Error trying to activate user " + newUser.getUsername(), e);
+      }
+    }
+    return true;
+  }
 }

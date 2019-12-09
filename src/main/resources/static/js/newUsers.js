@@ -81,5 +81,15 @@ function initNewUsers() {
       let username = $(this).parent().parent().find(USERNAME_FIELD_LOCATION).children().html();
       resendActivationEmail(username);
     });
+
+    $("#activateAllNewUsers").click(function() {
+      post(
+        "activateAllNewUsers",
+        null,
+        function (result) {
+          showSuccessToast('Successfully triggered activation for all new users!');
+        }
+      );
+    });
   });
 }
