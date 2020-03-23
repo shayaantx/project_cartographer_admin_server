@@ -45,7 +45,7 @@ public class UserDAO extends CommonDAO<User> {
       searchQuery = entityManager.createQuery("select u from User u where u.userId = :searchText");
       searchQuery.setParameter("searchText", Integer.valueOf(filterText));
     } else {
-      searchQuery = entityManager.createQuery("select u from User u where lower(u.username) like :searchText or u.userId = :searchText or lower(u.email) like :searchText");
+      searchQuery = entityManager.createQuery("select u from User u where lower(u.username) like :searchText or u.userId = :searchText or lower(u.email) like :searchText or u.ipAddress like :searchText");
       searchQuery.setParameter("searchText", "%" + filterText.toLowerCase() + "%");
     }
     List users = searchQuery.getResultList();
