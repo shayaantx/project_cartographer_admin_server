@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 public class NewUserActivator {
   @Scheduled(fixedDelay = 360000)
   public void scheduleFixedDelayTask() {
-    newUserBO.activateAll();
+    if (activateNewUsers) {
+      newUserBO.activateAll();
+    }
   }
 
   @Autowired
