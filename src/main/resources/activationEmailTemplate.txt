@@ -2,7 +2,7 @@
 <b>Project Cartographer</b> is a modification to the PC game <b>Halo 2 for Windows Vista</b> which was released in 2007. Our small not-for-profit team of programmers have reimplemented online play as the original online services for the game went down in 2015. Among this, the project aims to add many new features and make improvements to the game. A full description can be found on <a href=\"http://www.h2v.online/\">http://www.h2v.online/</a> or <a href=\"http://www.halo2vista.com/\">http://www.halo2vista.com/</a>.<br>
 <br>
 Someone has used your email address to create a new account. If you did not authorise this you can safely ignore this email as the following activation link dies after two (2) days. Otherwise, to activate your new account click on the following link.<br>
-<b>Username:</b> $user_username<br>
+<b>Username:</b> %s<br>
 <b>Activation Link:</b> <a href="%s">%s</a><br>
 <br>
 <b>Terms of Service:</b><br>
