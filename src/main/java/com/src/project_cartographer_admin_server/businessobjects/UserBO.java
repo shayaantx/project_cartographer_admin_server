@@ -290,7 +290,7 @@ public class UserBO {
     @Transactional(value = Transactional.TxType.REQUIRES_NEW)
     public void updateUser(Integer userIdParam, String username, String email, String userType, String comments) {
       User user = userDAO.loadEntity(userIdParam);
-      if (!user.getUsername().equalsIgnoreCase(username)) {
+      if (!user.getUsername().equals(username)) {
         user.setUsername(username);
         LOGGER_AUDIT.info("Username " + getUser().getUsername() + " changed to " + user.getUsername());
       }
