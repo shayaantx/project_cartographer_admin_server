@@ -6,7 +6,7 @@ ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk
 
 WORKDIR /home/cartographer
 
-COPY ./project_cartographer_admin_server .
+COPY . .
 
 RUN ./mvnw package -Dmaven.test.skip=true
 
