@@ -8,6 +8,7 @@ WORKDIR /home/cartographer
 
 COPY . .
 
+RUN chmod +x mvnw
 RUN ./mvnw package -Dmaven.test.skip=true
 
 ENTRYPOINT ["java", "-jar", "-Dspring.config.location=/home/cartographer/latest.properties", "/home/cartographer/project_cartographer_admin.jar"]
