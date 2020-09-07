@@ -82,12 +82,16 @@ spring.profiles.active=
 java -jar -Dspring.config.location=application.properties project_cartographer_admin.jar
 ```
 
-# To run with docker:
+# To build/run with docker:
 
 1) Create the application.properties above
 2) Set a home variable for where the code/properties/logs folder will live
-3) Run below command (if your mysql is not dockerized)
+3) Run below command in directory where code was clone
+```bash
+docker build --no-cache -t admin-server .
+```
+4) Run below command (if your mysql is not dockerized)
 ```bash
 docker run --net=host -v "$home/keystore.p12:/home/cartographer/keystore.p12" -v "$home/latest.properties:/home/cartographer/latest.properties:ro" -v "$home/logs:/home/cartographer/logs:rw" -d admin-server
 ```
-4) If you have a docker mysql, just remove --net=host and expose the ports configured in your app properties
+5) If you have a docker mysql, just remove --net=host and expose the ports configured in your app properties
