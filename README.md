@@ -21,8 +21,8 @@ Supports:
 # To build:
 
 1) Set JAVA_HOME environment variable
-2) Cd into the git workspace folder
-3) If windows, mvnw.cmd package, If linux, ./mvnw package
+2) CD into the git workspace folder
+3) If windows, mvnw.cmd package -Dmaven.test.skip=true, If linux, ./mvnw package -Dmaven.test.skip=true
 
 # To run:
 
