@@ -21,7 +21,7 @@ public class EmailHelper {
   public static void sendEmail(String email, String subject, String text) {
     String to = email;
     String from = "admin@cartographer.online";
-    String host = "localhost";
+    String host = "postfix";
     Properties properties = System.getProperties();
     properties.setProperty("mail.smtp.host", host);
     Session session = Session.getDefaultInstance(properties);
